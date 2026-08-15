@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SoloHQ Open Graph</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      body {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 72px 80px;
+        color: #fafafa;
+        background:
+          linear-gradient(rgba(24, 24, 27, 0.92), rgba(9, 9, 11, 0.96)),
+          repeating-linear-gradient(0deg, transparent 0 59px, rgba(52, 211, 153, 0.12) 59px 60px),
+          repeating-linear-gradient(90deg, transparent 0 59px, rgba(52, 211, 153, 0.12) 59px 60px);
+      }
+      .eyebrow {
+        align-self: flex-start;
+        padding: 10px 16px;
+        border: 1px solid rgba(52, 211, 153, 0.55);
+        border-radius: 999px;
+        color: #34d399;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 28px 0 18px;
+        font-size: 96px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      h1 span {
+        color: #34d399;
+      }
+      p {
+        margin: 0;
+        color: #a1a1aa;
+        font-size: 28px;
+        line-height: 1.45;
+      }
+      .cards {
+        display: flex;
+        gap: 14px;
+        margin-top: 44px;
+      }
+      .card {
+        padding: 12px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #d4d4d8;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="eyebrow">Local-first dashboard</div>
+    <h1>Solo<span>HQ</span></h1>
+    <p>Projects, memos, bookmarks, search, and revenue for one-person companies. No backend. No account. Everything stays in your browser.</p>
+    <div class="cards">
+      <div class="card">Project board</div>
+      <div class="card">Workspace memo</div>
+      <div class="card">Bookmarks</div>
+      <div class="card">JSON backup</div>
+    </div>
+  </body>
+</html>
