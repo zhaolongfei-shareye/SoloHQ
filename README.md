@@ -1,16 +1,66 @@
-# React + Vite
+# SoloHQ
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+SoloHQ is a local-first dashboard for one-person companies. It brings projects, workspace memos, bookmarks, search, and revenue tracking into a single browser app. All data lives in your browser's `localStorage`, so there is no backend and no account required.
 
-Currently, two official plugins are available:
+![SoloHQ dashboard](docs/screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Project board with Developing / Launched / Revenue Gen / Abandoned milestones
+- Per-project workspace memo
+- Quick search across Google, Bing, DuckDuckGo, and GitHub
+- Bookmark collections with quick-access icons
+- Google app shortcuts (Gmail, Gemini, Drive, Calendar, Meet, Keep)
+- Four themes: Minimal Light, Midnight Dark, Aura Glass, Cyber Hacker
+- Drag to reorder dashboard widgets
+- JSON backup export and import
+- Local-first persistence with no backend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the Oxlint configuration
+- React
+- Vite
+- Tailwind CSS 3
+- Lucide React
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173/ in your browser.
+
+## Scripts
+
+```bash
+npm run dev       # start the development server
+npm run build     # create a production build
+npm run preview   # preview the production build
+npm run lint      # run Oxlint
+npm test          # run Vitest
+```
+
+## Data & Privacy
+
+All project, bookmark, theme, and revenue data is stored locally in your browser under the `solo_*` localStorage keys. Use Settings > Data Backup to export a JSON backup or import one into another browser. No data is sent to any server.
+
+## Deployment
+
+The app is a standard Vite static build and can be deployed to Vercel, Netlify, GitHub Pages, or any static host.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fzhaolongfei-shareye%2FSoloHQ)
+
+```bash
+npm run build
+npm run preview
+```
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+## License
+
+[MIT](LICENSE)

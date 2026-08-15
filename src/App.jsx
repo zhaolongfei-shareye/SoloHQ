@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Settings, Plus, Trash2, Clock, BookOpen, Bookmark, 
+  Settings, Plus, Clock, 
   FileText, Globe, GitBranch, Cloud, PlayCircle, BarChart2, 
-  Activity, Save, Download, Copy, CheckCircle, Rocket, 
-  DollarSign, XCircle, ChevronRight, Edit3, Eye, Target,
-  ExternalLink, RefreshCw, Key, ShieldCheck, UserCheck,
-  Zap, Database, ArrowLeftRight, Check, AlertCircle, Sparkles, LogIn,
+  Activity, Save, Download, Rocket, 
+  DollarSign, XCircle, Edit3, Eye, Target,
+  ExternalLink, RefreshCw,
+  Zap, Database, Check, AlertCircle, Sparkles,
   Upload, Search, GripHorizontal, ChevronDown, Bot, MonitorPlay,
   Code, Star, Mail, Calendar, Video, HardDrive, LayoutDashboard,
-  EyeOff, Settings2, MoreHorizontal
+  EyeOff, Settings2
 } from 'lucide-react';
 
 const defaultProjects = [
@@ -142,7 +142,7 @@ export default function SoloDashboard() {
     if (layoutOrder.includes('stats') || layoutOrder.includes('chips')) {
       setLayoutOrder(['bookmarks', 'search', 'project_board', 'workspace']);
     }
-  }, []);
+  }, [layoutOrder, setLayoutOrder]);
   
   const [projects, setProjects] = useLocalStorage('solo_projects_v8', defaultProjects);
   const [bookmarksData, setBookmarksData] = useLocalStorage('solo_bookmarks_v8', defaultBookmarks);
@@ -326,7 +326,7 @@ export default function SoloDashboard() {
           setBookmarksData(importedData.bookmarks);
         }
         alert("Data imported successfully! 数据导入成功！");
-      } catch (error) {
+      } catch {
         alert("Invalid JSON file! 无效的备份文件！");
       }
     };
@@ -614,7 +614,7 @@ export default function SoloDashboard() {
             <Clock size={12} className="opacity-50" />
             {currentTime.toLocaleTimeString('en-US', { hour12: false })}
           </div>
-          <button onClick={() => setIsSettingsOpen(true)} className={`p-1.5 rounded-full transition-transform hover:rotate-90 ${theme === 'glass' ? 'bg-white/10 hover:bg-white/20' : 'bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20'}`}>
+          <button aria-label="Open settings" onClick={() => setIsSettingsOpen(true)} className={`p-1.5 rounded-full transition-transform hover:rotate-90 ${theme === 'glass' ? 'bg-white/10 hover:bg-white/20' : 'bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20'}`}>
             <Settings size={16} />
           </button>
         </div>

@@ -1,0 +1,25 @@
+name: Bug report
+description: Report a problem with SoloHQ
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the dashboard
+        2. Click ...
+        3. See the error
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Browser, OS, and SoloHQ version
