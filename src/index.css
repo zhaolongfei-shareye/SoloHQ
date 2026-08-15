@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 确保页面撑满全屏，适配极客起始页体验 */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* 优化全局输入框和按钮的聚焦轮廓 */
+*:focus {
+  outline: none;
+}
