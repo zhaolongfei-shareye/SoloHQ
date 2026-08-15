@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Settings, Plus, Clock, 
   FileText, Globe, GitBranch, Cloud, PlayCircle, BarChart2, 
   Activity, Save, Download, Rocket, 
-  DollarSign, XCircle, Edit3, Eye, Target,
+  DollarSign, XCircle, Edit3, Eye, Target, Trash2,
   ExternalLink, RefreshCw,
   Zap, Database, Check, AlertCircle, Sparkles,
   Upload, Search, GripHorizontal, ChevronDown, Bot, MonitorPlay,
@@ -112,10 +112,22 @@ const getIcon = (iconName) => {
   return <IconCmp size={14} />;
 };
 
+const DEFAULT_MEMO = '# Vision\n\n- Write goals here...';
+
+const isDemoMode = () =>
+  typeof window !== 'undefined' &&
+  (window.location.hostname.includes('agentsbin.com') || window.location.pathname.includes('/solohq/demo/'));
+
+const hasProjectNotes = (project) => {
+  const memo = String((project && project.memo) || '').trim();
+  return memo.length > 0 && memo !== DEFAULT_MEMO;
+};
+
 function useLocalStorage(key, initialValue) {
+  const storage = isDemoMode() ? window.sessionStorage : window.localStorage;
   const [storedValue, setStoredValue] = useState(() => {
     try {
-      const item = window.localStorage.getItem(key);
+      const item = storage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.error("Local storage error:", error);
@@ -125,11 +137,11 @@ function useLocalStorage(key, initialValue) {
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(key, JSON.stringify(storedValue));
+      storage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
       console.error("Local storage error:", error);
     }
-  }, [key, storedValue]);
+  }, [key, storedValue, storage]);
 
   return [storedValue, setStoredValue];
 }
@@ -152,13 +164,16 @@ export default function SoloDashboard() {
   const [showAppsSetup, setShowAppsSetup] = useState(false);
 
   const [showStats, setShowStats] = useLocalStorage('solo_show_stats_v8', false);
+  const [deletedProjectsCount, setDeletedProjectsCount] = useLocalStorage('solo_deleted_count_v8', 0);
 
   const [revenueConfig, setRevenueConfig] = useLocalStorage('solo_revenue_cfg_v8', {
     mode: 'manual', manualMrr: 4500, stripeApiKey: '', autoMrrValue: 0
   });
 
   const [activeProjectId, setActiveProjectId] = useState(projects.length > 0 ? projects[0].id : null);
+  const isNewProjectRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -174,7 +189,11 @@ export default function SoloDashboard() {
   }, []);
 
   useEffect(() => {
-    setIsEditing(false);
+    if (isNewProjectRef.current) {
+      isNewProjectRef.current = false;
+    } else {
+      setIsEditing(false);
+    }
   }, [activeProjectId]);
 
   const themeStyles = {
@@ -187,13 +206,14 @@ export default function SoloDashboard() {
   const currentTheme = themeStyles[theme] || themeStyles.dark;
   const sortedProjects = [...projects].sort((a, b) => b.lastUpdated - a.lastUpdated);
   const activeProject = projects.find(p => p.id === activeProjectId) || null;
+  const deletedProjectsTotal = Number(deletedProjectsCount) || 0;
 
   const stats = {
     total: projects.length,
     developing: projects.filter(p => p.status === 'developing').length,
     launched: projects.filter(p => p.status === 'launched').length,
     revenue: projects.filter(p => p.status === 'revenue').length,
-    abandoned: projects.filter(p => p.status === 'abandoned').length,
+    abandoned: projects.filter(p => p.status === 'abandoned').length + deletedProjectsTotal,
   };
 
   const getStatusColor = (status) => {
@@ -228,6 +248,18 @@ export default function SoloDashboard() {
 
   const updateProject = (id, updates) => {
     setProjects(projects.map(p => p.id === id ? { ...p, ...updates, lastUpdated: Date.now() } : p));
+  };
+
+  const handleDeleteProject = () => {
+    if (!activeProject) return;
+    const remainingProjects = projects.filter(p => p.id !== activeProject.id);
+    setProjects(remainingProjects);
+    if (hasProjectNotes(activeProject)) {
+      setDeletedProjectsCount(prev => (Number(prev) || 0) + 1);
+    }
+    setIsDeleteConfirmOpen(false);
+    setIsEditing(false);
+    setActiveProjectId(remainingProjects.length > 0 ? remainingProjects[0].id : null);
   };
 
   const handleSearch = (e) => {
@@ -291,6 +323,7 @@ export default function SoloDashboard() {
     const exportData = {
       projects: projects,
       bookmarks: bookmarksData,
+      deletedProjectsCount: deletedProjectsTotal,
       timestamp: new Date().toISOString(),
       version: "1.0"
     };
@@ -324,6 +357,9 @@ export default function SoloDashboard() {
         }
         if (importedData.bookmarks && Array.isArray(importedData.bookmarks)) {
           setBookmarksData(importedData.bookmarks);
+        }
+        if (typeof importedData.deletedProjectsCount === 'number') {
+          setDeletedProjectsCount(importedData.deletedProjectsCount);
         }
         alert("Data imported successfully! 数据导入成功！");
       } catch {
@@ -448,6 +484,10 @@ export default function SoloDashboard() {
                 <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-amber-500`}>Revenue</span>
                 <span className="text-2xl font-black">{stats.revenue}</span>
               </div>
+              <div className="flex flex-col justify-center flex-shrink-0">
+                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-zinc-500`}>Abandoned</span>
+                <span className="text-2xl font-black">{stats.abandoned}</span>
+              </div>
           </div>
           <div className={`absolute inset-0 flex items-center gap-3 px-4 py-2 overflow-x-auto scrollbar-hide transition-all duration-500 ease-in-out ${!showStats ? 'opacity-100 translate-y-0 relative' : 'opacity-0 -translate-y-8 pointer-events-none absolute'}`}>
               {sortedProjects.map(project => (
@@ -465,13 +505,14 @@ export default function SoloDashboard() {
                   </div>
                 </div>
               ))}
-              <button onClick={() => {
+              <button aria-label="Create project" onClick={() => {
                   const newId = Date.now().toString();
                   setProjects([{
                     id: newId, name: 'New Project', progress: 0, status: 'developing', hours: 0, lastUpdated: Date.now(),
                     links: { github: '', knowledge: '', deploy: '', demo: '', analytics: '' },
-                    memo: '# Vision\n\n- Write goals here...'
+                    memo: DEFAULT_MEMO
                   }, ...projects]);
+                  isNewProjectRef.current = true;
                   setActiveProjectId(newId);
                   setIsEditing(true);
                 }} className={`flex-shrink-0 w-12 h-[68px] flex flex-col items-center justify-center rounded-lg border border-dashed transition-all opacity-50 hover:opacity-100 ${theme === 'glass' ? 'border-white/30 hover:bg-white/10' : 'border-current'}`}>
@@ -516,9 +557,16 @@ export default function SoloDashboard() {
               <h2 className="font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 opacity-70">
                 {isEditing ? <Edit3 size={14} /> : <Target size={14} />} {isEditing ? 'Configure' : 'Overview'}
               </h2>
-              <button onClick={() => setIsEditing(!isEditing)} className={`px-3 py-1 rounded text-[10px] font-bold border transition-all flex items-center gap-1 ${isEditing ? 'bg-emerald-500 text-white border-emerald-500 shadow-md' : `border-current/20 ${currentTheme.accentText} hover:bg-black/5 dark:hover:bg-white/10`}`}>
-                {isEditing ? <><Save size={12}/> Save</> : <><Edit3 size={12}/> Edit</>}
-              </button>
+              <div className="flex items-center gap-2">
+                {isEditing && (
+                  <button aria-label="Delete project" title="Delete project" onClick={() => setIsDeleteConfirmOpen(true)} className="p-2 rounded text-red-400 hover:bg-red-500/10 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+                )}
+                <button onClick={() => setIsEditing(!isEditing)} className={`px-3 py-1 rounded text-[10px] font-bold border transition-all flex items-center gap-1 ${isEditing ? 'bg-emerald-500 text-white border-emerald-500 shadow-md' : `border-current/20 ${currentTheme.accentText} hover:bg-black/5 dark:hover:bg-white/10`}`}>
+                  {isEditing ? <><Save size={12}/> Save</> : <><Edit3 size={12}/> Edit</>}
+                </button>
+              </div>
             </div>
             <div className="p-5 space-y-6 overflow-y-auto scrollbar-hide flex-1">
               <div>
@@ -604,6 +652,13 @@ export default function SoloDashboard() {
 
   return (
     <div className={`min-h-screen transition-colors duration-500 flex flex-col font-sans ${currentTheme.bg}`}>
+      {isDemoMode() && (
+        <div className="w-full px-4 py-2 text-center text-xs font-bold bg-amber-500/10 border-b border-amber-500/25 text-amber-400">
+          Demo data resets when you close this window. Use it for testing only.{" "}
+          <a href="https://github.com/zhaolongfei-shareye/SoloHQ" target="_blank" rel="noreferrer" className="underline">Download SoloHQ</a>{" "}
+          to keep your data locally.
+        </div>
+      )}
       <nav className={`sticky top-0 z-40 px-6 py-3 flex items-center justify-between ${currentTheme.header}`}>
         <div className="flex items-center gap-3">
           <Target className={currentTheme.accentText} size={20} />
@@ -631,6 +686,22 @@ export default function SoloDashboard() {
           );
         })}
       </div>
+
+      {isDeleteConfirmOpen && activeProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className={`w-full max-w-sm rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-black flex items-center gap-2"><Trash2 size={20} className="text-red-500" /> Delete Project</h3>
+              <button aria-label="Close delete dialog" onClick={() => setIsDeleteConfirmOpen(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
+            </div>
+            <p className="text-sm opacity-70 mb-6">Delete "{activeProject.name}"? {hasProjectNotes(activeProject) ? 'This project will be counted as abandoned.' : 'This project has no notes and will not affect the abandoned count.'}</p>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setIsDeleteConfirmOpen(false)} className="px-4 py-2 rounded-lg text-xs font-bold border border-current/20 hover:bg-black/5 dark:hover:bg-white/10">Cancel</button>
+              <button onClick={handleDeleteProject} className="px-4 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-500">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isSettingsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">

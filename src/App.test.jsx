@@ -25,4 +25,26 @@ describe('SoloHQ', () => {
     expect(screen.getByText('Export JSON')).toBeInTheDocument()
     expect(screen.getByText('Import JSON')).toBeInTheDocument()
   })
+
+  it('deletes a project from edit mode after confirmation', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: /^Edit$/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete project' }))
+
+    expect(screen.getByText(/Delete "AI SaaS Generator"/i)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
+
+    expect(screen.queryAllByText('AI SaaS Generator').length).toBe(0)
+  })
+
+  it('does not count note-less project deletion as abandoned', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Create project' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete project' }))
+
+    expect(screen.getByText(/will not affect the abandoned count/i)).toBeInTheDocument()
+  })
 })
