@@ -13,6 +13,8 @@ SoloHQ is a local-first dashboard for one-person companies. It brings projects, 
 
 - Project board with Developing / Launched / Revenue Gen / Abandoned milestones
 - Per-project workspace memo
+- Delete projects from the editor with a confirmation dialog
+- Abandoned counter that only counts projects with real notes
 - Quick search across Google, Bing, DuckDuckGo, and GitHub
 - Bookmark collections with quick-access icons
 - Google app shortcuts (Gmail, Gemini, Drive, Calendar, Meet, Keep)
@@ -50,6 +52,8 @@ npm test          # run Vitest
 ## Data & Privacy
 
 All project, bookmark, theme, and revenue data is stored locally in your browser under the `solo_*` localStorage keys. Use Settings > Data Backup to export a JSON backup or import one into another browser. No data is sent to any server.
+
+On the agentsbin.com demo, data is stored in `sessionStorage` and resets when the window closes. Download or run the app locally to keep persistent data in `localStorage`.
 
 ## Deployment
 

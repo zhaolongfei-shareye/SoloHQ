@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Delete projects from the edit panel with a confirmation dialog
+- Abandoned counter that increments only for projects with real notes
+- Demo session reset and top notice on agentsbin.com
+- Homepage SoloHQ card and unified about footer on agentsbin.com
+
 ## [0.1.0] - 2026-08-15
 
 ### Added
