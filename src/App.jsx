@@ -29,6 +29,11 @@ const languageOptions = [
   ['fr', 'Français'], ['de', 'Deutsch'], ['pt', 'Português'], ['ru', 'Русский'], ['ar', 'العربية']
 ];
 
+const interfaceTranslations = {
+  en: { search: 'Search with {engine}...', quickApps: 'Quick Apps', showStats: 'Show Stats', hideStats: 'Hide Stats', data: 'DATA', projects: 'PROJ', globalMrr: 'Global MRR', total: 'Total', launched: 'Launched', revenue: 'Revenue', abandoned: 'Abandoned', developing: 'Developing', newProject: 'New Project', selectProject: 'Select or Create a Project', workspaceMemo: 'Workspace Memo', sync: 'Sync', configure: 'Configure', overview: 'Overview', save: 'Save', edit: 'Edit', projectName: 'Project Name', milestone: 'Milestone', completion: 'Completion', integrations: 'Integrations', sourceCode: 'Source Code', liveServer: 'Live Server', publicDemo: 'Public Demo', dataPanel: 'Data Panel', noLinks: 'No links configured.', startup: 'Set as startup page', deleteProject: 'Delete Project', cancel: 'Cancel', delete: 'Delete', dataBackup: 'Data Backup', localBackup: 'Your data is stored locally. Export a JSON backup to move between browsers.', exportJson: 'Export JSON', importJson: 'Import JSON', interfaceTheme: 'Interface Theme', drag: 'Drag to reorder', copied: 'Copied', copyLink: 'Copy link' },
+  zh: { search: '使用 {engine} 搜索...', quickApps: '快捷应用', showStats: '显示统计', hideStats: '隐藏统计', data: '数据', projects: '项目', globalMrr: '总月经常性收入', total: '总计', launched: '已发布', revenue: '有收入', abandoned: '已放弃', developing: '开发中', newProject: '新项目', selectProject: '选择或新建项目', workspaceMemo: '工作区笔记', sync: '同步', configure: '配置', overview: '概览', save: '保存', edit: '编辑', projectName: '项目名称', milestone: '里程碑', completion: '完成进度', integrations: '集成', sourceCode: '源代码', liveServer: '线上服务', publicDemo: '公开演示', dataPanel: '数据面板', noLinks: '尚未配置链接。', startup: '设为启动页', deleteProject: '删除项目', cancel: '取消', delete: '删除', dataBackup: '数据备份', localBackup: '数据保存在本机。导出 JSON 备份可在浏览器之间迁移。', exportJson: '导出 JSON', importJson: '导入 JSON', interfaceTheme: '界面主题', drag: '拖拽排序', copied: '已复制', copyLink: '复制链接' }
+};
+
 const defaultProjects = [
   {
     id: 'p1',
@@ -210,6 +215,10 @@ export default function SoloDashboard() {
     const template = cloudTranslations[language]?.[key] || cloudTranslations.en[key] || key;
     return Object.entries(variables).reduce((value, [name, replacement]) => value.replace(`{${name}}`, replacement), template);
   }, [language]);
+  const tu = useCallback((key, variables = {}) => {
+    const template = interfaceTranslations[language]?.[key] || interfaceTranslations.en[key] || key;
+    return Object.entries(variables).reduce((value, [name, replacement]) => value.replace(`{${name}}`, replacement), template);
+  }, [language]);
   
   const [isSyncingNotes, setIsSyncingNotes] = useState(false);
   const [syncStatusText, setSyncStatusText] = useState('In Sync');
@@ -262,10 +271,10 @@ export default function SoloDashboard() {
 
   const getStatusLabel = (status) => {
     switch(status) {
-      case 'developing': return 'Developing';
-      case 'launched': return 'Launched';
-      case 'revenue': return 'Revenue Gen';
-      case 'abandoned': return 'Abandoned';
+      case 'developing': return tu('developing');
+      case 'launched': return tu('launched');
+      case 'revenue': return tu('revenue');
+      case 'abandoned': return tu('abandoned');
       default: return 'Unknown';
     }
   };
@@ -455,7 +464,7 @@ export default function SoloDashboard() {
     window.clearTimeout(cloudTimerRef.current);
     cloudTimerRef.current = window.setTimeout(() => uploadWorkspace(), 900);
     return () => window.clearTimeout(cloudTimerRef.current);
-  }, [projects, bookmarksData, theme, layoutOrder, activeEngine, activeGoogleApps, showStats, deletedProjectsCount, revenueConfig, cloudStatus, uploadWorkspace]);
+  }, [projects, bookmarksData, theme, layoutOrder, activeEngine, activeGoogleApps, showStats, deletedProjectsCount, revenueConfig, language, cloudStatus, uploadWorkspace]);
 
   const handleDragStart = (e, id) => {
     setDraggedItem(id);
@@ -560,7 +569,7 @@ export default function SoloDashboard() {
 
   const renderBookmarks = () => (
     <div className={`p-4 rounded-xl ${currentTheme.widget} relative group transition-all`}>
-      <div draggable onDragStart={(e) => handleDragStart(e, 'bookmarks')} onDragEnd={handleDragEnd} className={`absolute top-3 left-2 cursor-grab active:cursor-grabbing p-1 ${currentTheme.dragHandle}`} title="Drag to reorder">
+      <div draggable onDragStart={(e) => handleDragStart(e, 'bookmarks')} onDragEnd={handleDragEnd} className={`absolute top-3 left-2 cursor-grab active:cursor-grabbing p-1 ${currentTheme.dragHandle}`} title={tu('drag')}>
         <GripHorizontal size={14} />
       </div>
       <div className="absolute top-3 right-3 hidden sm:block">
@@ -601,7 +610,7 @@ export default function SoloDashboard() {
         </div>
         <div className="relative flex-1">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-40" />
-          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={`Search with ${searchEngines.find(e => e.id === activeEngine)?.name}...`} className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm outline-none border transition-colors ${currentTheme.input}`} />
+          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={tu('search', { engine: searchEngines.find(e => e.id === activeEngine)?.name })} className={`w-full pl-10 pr-4 py-3 rounded-lg text-sm outline-none border transition-colors ${currentTheme.input}`} />
         </div>
       </form>
       <div className="flex items-center gap-2 pr-2">
@@ -617,7 +626,7 @@ export default function SoloDashboard() {
           </button>
           {showAppsSetup && (
             <div className={`absolute top-full right-0 mt-2 w-48 p-3 rounded-xl z-50 shadow-2xl border ${theme === 'glass' ? 'bg-slate-900/90 backdrop-blur-xl border-white/20' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'}`}>
-              <h4 className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${theme === 'glass' ? 'text-white/50' : 'text-zinc-500'}`}>Quick Apps</h4>
+              <h4 className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${theme === 'glass' ? 'text-white/50' : 'text-zinc-500'}`}>{tu('quickApps')}</h4>
               <div className="space-y-1">
                 {availableGoogleApps.map(app => (
                   <label key={app.id} className="flex items-center gap-2 text-xs p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
@@ -642,18 +651,18 @@ export default function SoloDashboard() {
           <GripHorizontal size={14} />
         </div>
         <div className={`w-14 sm:w-16 flex-shrink-0 flex flex-col items-center justify-center border-r border-current/10 bg-black/5 dark:bg-white/5 z-10 py-4 gap-4`}>
-           <button onClick={() => setShowStats(!showStats)} className={`p-2 rounded-full transition-all ${showStats ? currentTheme.accent : 'bg-transparent hover:bg-black/10 dark:hover:bg-white/10'}`} title={showStats ? "Hide Stats" : "Show Stats"}>
+           <button onClick={() => setShowStats(!showStats)} className={`p-2 rounded-full transition-all ${showStats ? currentTheme.accent : 'bg-transparent hover:bg-black/10 dark:hover:bg-white/10'}`} title={showStats ? tu('hideStats') : tu('showStats')}>
              {showStats ? <EyeOff size={18} /> : <Eye size={18} />}
            </button>
            <div className="[writing-mode:vertical-lr] text-[10px] uppercase font-bold tracking-widest opacity-40">
-             {showStats ? 'DATA' : 'PROJ'}
+             {showStats ? tu('data') : tu('projects')}
            </div>
         </div>
         <div className="flex-1 relative overflow-hidden flex items-center min-h-[80px]">
           <div className={`absolute inset-0 flex items-center transition-all duration-500 ease-in-out p-4 gap-6 overflow-x-auto scrollbar-hide ${showStats ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 pointer-events-none absolute'}`}>
               <div className="flex flex-col justify-center pr-6 border-r border-current/10 flex-shrink-0">
                 <div className="flex items-center gap-1 mb-1">
-                  <span className={`text-[10px] uppercase tracking-wider font-bold ${currentTheme.textMuted}`}>Global MRR</span>
+                  <span className={`text-[10px] uppercase tracking-wider font-bold ${currentTheme.textMuted}`}>{tu('globalMrr')}</span>
                 </div>
                 <div className="flex items-baseline gap-1">
                   <span className={`text-xl font-bold ${currentTheme.accentText}`}>$</span>
@@ -661,19 +670,19 @@ export default function SoloDashboard() {
                 </div>
               </div>
               <div className="flex flex-col justify-center flex-shrink-0">
-                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 ${currentTheme.textMuted}`}>Total</span>
+                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 ${currentTheme.textMuted}`}>{tu('total')}</span>
                 <span className="text-2xl font-black">{stats.total}</span>
               </div>
               <div className="flex flex-col justify-center flex-shrink-0">
-                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-emerald-500`}>Launched</span>
+                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-emerald-500`}>{tu('launched')}</span>
                 <span className="text-2xl font-black">{stats.launched}</span>
               </div>
               <div className="flex flex-col justify-center flex-shrink-0">
-                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-amber-500`}>Revenue</span>
+                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-amber-500`}>{tu('revenue')}</span>
                 <span className="text-2xl font-black">{stats.revenue}</span>
               </div>
               <div className="flex flex-col justify-center flex-shrink-0">
-                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-zinc-500`}>Abandoned</span>
+                <span className={`text-[10px] uppercase tracking-wider font-bold mb-1 text-zinc-500`}>{tu('abandoned')}</span>
                 <span className="text-2xl font-black">{stats.abandoned}</span>
               </div>
           </div>
@@ -696,7 +705,7 @@ export default function SoloDashboard() {
               <button aria-label="Create project" onClick={() => {
                   const newId = Date.now().toString();
                   setProjects([{
-                    id: newId, name: 'New Project', progress: 0, status: 'developing', hours: 0, lastUpdated: Date.now(),
+                    id: newId, name: tu('newProject'), progress: 0, status: 'developing', hours: 0, lastUpdated: Date.now(),
                     links: { github: '', knowledge: '', deploy: '', demo: '', analytics: '' },
                     memo: DEFAULT_MEMO
                   }, ...projects]);
@@ -715,7 +724,7 @@ export default function SoloDashboard() {
     if (!activeProject) return (
       <div className={`flex-1 flex flex-col items-center justify-center rounded-xl border border-dashed opacity-50 min-h-[400px] ${theme === 'glass' ? 'border-white/30' : 'border-current'}`}>
         <Target size={32} className="mb-2" />
-        <p className="text-sm font-bold">Select or Create a Project</p>
+        <p className="text-sm font-bold">{tu('selectProject')}</p>
       </div>
     );
     return (
@@ -727,14 +736,14 @@ export default function SoloDashboard() {
             <div className={`p-3 px-4 border-b border-current/10 flex justify-between items-center bg-black/5 dark:bg-white/5`}>
               <div className="flex items-center gap-2">
                 <FileText size={16} className={currentTheme.accentText} />
-                <span className="font-bold text-sm truncate">{activeProject.name} <span className="opacity-40 font-normal">| Workspace Memo</span></span>
+                <span className="font-bold text-sm truncate">{activeProject.name} <span className="opacity-40 font-normal">| {tu('workspaceMemo')}</span></span>
               </div>
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] font-bold flex items-center gap-1 ${isSyncingNotes ? 'text-blue-400 animate-pulse' : 'opacity-50'}`}>
                   {isSyncingNotes ? <RefreshCw size={10} className="animate-spin" /> : <Check size={10} />} {syncStatusText}
                 </span>
                 <button onClick={syncToNotebookLM} className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold border transition-colors border-current/20 hover:bg-black/5 dark:hover:bg-white/10`} title="Export to NotebookLM Format">
-                  <Download size={12} /> Sync
+                  <Download size={12} /> {tu('sync')}
                 </button>
               </div>
             </div>
@@ -743,7 +752,7 @@ export default function SoloDashboard() {
         <div className={`w-full lg:w-80 flex flex-col rounded-xl overflow-hidden flex-shrink-0 shadow-sm border ${currentTheme.widget}`}>
             <div className={`p-3 px-4 border-b border-current/10 flex justify-between items-center bg-black/5 dark:bg-white/5`}>
               <h2 className="font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 opacity-70">
-                {isEditing ? <Edit3 size={14} /> : <Target size={14} />} {isEditing ? 'Configure' : 'Overview'}
+                {isEditing ? <Edit3 size={14} /> : <Target size={14} />} {isEditing ? tu('configure') : tu('overview')}
               </h2>
               <div className="flex items-center gap-2">
                 {isEditing && (
@@ -752,7 +761,7 @@ export default function SoloDashboard() {
                   </button>
                 )}
                 <button onClick={() => setIsEditing(!isEditing)} className={`px-3 py-1 rounded text-[10px] font-bold border transition-all flex items-center gap-1 ${isEditing ? 'bg-emerald-500 text-white border-emerald-500 shadow-md' : `border-current/20 ${currentTheme.accentText} hover:bg-black/5 dark:hover:bg-white/10`}`}>
-                  {isEditing ? <><Save size={12}/> Save</> : <><Edit3 size={12}/> Edit</>}
+                  {isEditing ? <><Save size={12}/> {tu('save')}</> : <><Edit3 size={12}/> {tu('edit')}</>}
                 </button>
               </div>
             </div>
@@ -761,11 +770,11 @@ export default function SoloDashboard() {
                 {isEditing ? (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase opacity-50 mb-1">Project Name</label>
+                      <label className="block text-[10px] font-bold uppercase opacity-50 mb-1">{tu('projectName')}</label>
                       <input value={activeProject.name} onChange={(e) => updateProject(activeProject.id, { name: e.target.value })} className={`text-sm font-bold w-full p-2.5 rounded-lg border ${currentTheme.input}`} />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold uppercase opacity-50 mb-1">Milestone</label>
+                      <label className="block text-[10px] font-bold uppercase opacity-50 mb-1">{tu('milestone')}</label>
                       <div className="grid grid-cols-2 gap-2">
                         {['developing', 'launched', 'revenue', 'abandoned'].map(s => (
                           <button key={s} onClick={() => updateProject(activeProject.id, { status: s })} className={`py-2 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 border transition-all ${activeProject.status === s ? `border-current ${getStatusColor(s)} bg-black/10 dark:bg-white/10 shadow-sm` : 'border-transparent opacity-50 bg-black/5 dark:bg-white/5 hover:opacity-100'}`}>
@@ -788,7 +797,7 @@ export default function SoloDashboard() {
               </div>
               <div className="space-y-2 p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-current/5">
                 <div className="flex justify-between items-end">
-                  <span className={`text-[10px] uppercase font-bold opacity-60 flex items-center gap-1`}><Activity size={12}/> Completion</span>
+                  <span className={`text-[10px] uppercase font-bold opacity-60 flex items-center gap-1`}><Activity size={12}/> {tu('completion')}</span>
                   <span className={`text-sm font-black ${getStatusColor(activeProject.status)}`}>{activeProject.progress}%</span>
                 </div>
                 {isEditing ? (
@@ -800,13 +809,13 @@ export default function SoloDashboard() {
                 )}
               </div>
               <div>
-                <h4 className={`text-[10px] uppercase font-bold mb-3 opacity-50 flex items-center gap-1`}><Zap size={12}/> Integrations</h4>
+                <h4 className={`text-[10px] uppercase font-bold mb-3 opacity-50 flex items-center gap-1`}><Zap size={12}/> {tu('integrations')}</h4>
                 <div className="space-y-2">
                   {[
-                    { key: 'github', label: 'Source Code', icon: GitBranch },
-                    { key: 'deploy', label: 'Live Server', icon: Cloud },
-                    { key: 'demo', label: 'Public Demo', icon: PlayCircle },
-                    { key: 'analytics', label: 'Data Panel', icon: BarChart2 }
+                    { key: 'github', label: tu('sourceCode'), icon: GitBranch },
+                    { key: 'deploy', label: tu('liveServer'), icon: Cloud },
+                    { key: 'demo', label: tu('publicDemo'), icon: PlayCircle },
+                    { key: 'analytics', label: tu('dataPanel'), icon: BarChart2 }
                   ].map(field => {
                     const hasLink = !!activeProject.links[field.key];
                     if (!isEditing && !hasLink) return null;
@@ -826,7 +835,7 @@ export default function SoloDashboard() {
                     );
                   })}
                   {!isEditing && Object.values(activeProject.links).every(l => !l) && (
-                    <div className="text-[10px] opacity-40 text-center py-2 italic border border-dashed rounded-lg border-current/20">No links configured.</div>
+                    <div className="text-[10px] opacity-40 text-center py-2 italic border border-dashed rounded-lg border-current/20">{tu('noLinks')}</div>
                   )}
                 </div>
               </div>
@@ -858,7 +867,7 @@ export default function SoloDashboard() {
             {currentTime.toLocaleTimeString('en-US', { hour12: false })}
           </div>
           <button onClick={() => setShowStartupGuide(true)} className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border border-current/15 transition-colors hover:bg-black/5 dark:hover:bg-white/10 ${currentTheme.textMuted}`}>
-            <Globe size={13} /> Set as startup page
+            <Globe size={13} /> {tu('startup')}
           </button>
           <button aria-label="Open settings" onClick={() => setIsSettingsOpen(true)} className={`p-1.5 rounded-full transition-transform hover:rotate-90 ${theme === 'glass' ? 'bg-white/10 hover:bg-white/20' : 'bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20'}`}>
             <Settings size={16} />
@@ -882,13 +891,13 @@ export default function SoloDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <div className={`w-full max-w-sm rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-black flex items-center gap-2"><Trash2 size={20} className="text-red-500" /> Delete Project</h3>
+              <h3 className="text-lg font-black flex items-center gap-2"><Trash2 size={20} className="text-red-500" /> {tu('deleteProject')}</h3>
               <button aria-label="Close delete dialog" onClick={() => setIsDeleteConfirmOpen(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
             </div>
             <p className="text-sm opacity-70 mb-6">Delete "{activeProject.name}"? {hasProjectNotes(activeProject) ? 'This project will be counted as abandoned.' : 'This project has no notes and will not affect the abandoned count.'}</p>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setIsDeleteConfirmOpen(false)} className="px-4 py-2 rounded-lg text-xs font-bold border border-current/20 hover:bg-black/5 dark:hover:bg-white/10">Cancel</button>
-              <button onClick={handleDeleteProject} className="px-4 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-500">Delete</button>
+              <button onClick={() => setIsDeleteConfirmOpen(false)} className="px-4 py-2 rounded-lg text-xs font-bold border border-current/20 hover:bg-black/5 dark:hover:bg-white/10">{tu('cancel')}</button>
+              <button onClick={handleDeleteProject} className="px-4 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-500">{tu('delete')}</button>
             </div>
           </div>
         </div>
@@ -898,7 +907,7 @@ export default function SoloDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div className={`w-full max-w-lg rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-black flex items-center gap-2"><Globe size={20} className={currentTheme.accentText} /> Set SoloHQ as your startup page</h3>
+              <h3 className="text-lg font-black flex items-center gap-2"><Globe size={20} className={currentTheme.accentText} /> {tu('startup')}</h3>
               <button aria-label="Close startup page guide" onClick={() => setShowStartupGuide(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
             </div>
             <p className="text-sm opacity-70 leading-relaxed mb-5">This takes one minute and does not install anything. Chrome and Edge will open SoloHQ whenever you start the browser.</p>
@@ -911,7 +920,7 @@ export default function SoloDashboard() {
               <code className="min-w-0 flex-1 truncate text-xs opacity-70">{window.location.href}</code>
               <button onClick={copyStartupUrl} className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold ${currentTheme.accent}`}>
                 {hasCopiedStartupUrl ? <Check size={14} /> : <Copy size={14} />}
-                {hasCopiedStartupUrl ? 'Copied' : 'Copy link'}
+                {hasCopiedStartupUrl ? tu('copied') : tu('copyLink')}
               </button>
             </div>
             <p className="mt-4 text-xs opacity-50">New tabs remain controlled by your browser. This setting only changes the page opened when the browser starts.</p>
@@ -962,7 +971,7 @@ export default function SoloDashboard() {
             </div>
             <div className="space-y-8">
               <div>
-                <label className="flex items-center gap-2 text-xs font-bold uppercase mb-3 opacity-60"><LayoutDashboard size={14}/> Interface Theme</label>
+                <label className="flex items-center gap-2 text-xs font-bold uppercase mb-3 opacity-60"><LayoutDashboard size={14}/> {tu('interfaceTheme')}</label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[{ id: 'light', label: 'Minimal Light' }, { id: 'dark', label: 'Midnight Dark' }, { id: 'glass', label: 'Aura Glass' }, { id: 'hacker', label: 'Cyber Hacker' }].map(thm => (
                     <button key={thm.id} onClick={() => setTheme(thm.id)} className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all ${theme === thm.id ? `border-current ${currentTheme.accentText} bg-black/5 dark:bg-white/10 shadow-inner` : 'border-current/10 opacity-60 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5'}`}>{thm.label}</button>
@@ -990,13 +999,13 @@ export default function SoloDashboard() {
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className={`p-4 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5`}>
-                   <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2 opacity-80"><Database size={14} className="text-blue-500"/> Data Backup</h3>
+                   <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2 opacity-80"><Database size={14} className="text-blue-500"/> {tu('dataBackup')}</h3>
                    <div className="space-y-3">
-                      <p className="text-[10px] opacity-60 leading-relaxed">Your data is stored locally. Export a JSON backup to move between browsers.</p>
+                      <p className="text-[10px] opacity-60 leading-relaxed">{tu('localBackup')}</p>
                       <div className="flex gap-2">
-                        <button onClick={handleExportJSON} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors"><Download size={12}/> Export JSON</button>
+                        <button onClick={handleExportJSON} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors"><Download size={12}/> {tu('exportJson')}</button>
                         <label className="flex-1 flex items-center justify-center gap-1 text-xs py-2 rounded bg-zinc-800 text-zinc-100 font-bold hover:bg-zinc-700 transition-colors cursor-pointer">
-                          <Upload size={12}/> Import JSON
+                          <Upload size={12}/> {tu('importJson')}
                           <input type="file" accept=".json,application/json" onChange={handleImportJSON} className="hidden" />
                         </label>
                       </div>
