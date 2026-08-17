@@ -1,6 +1,6 @@
 # SoloHQ
 
-SoloHQ is a local-first dashboard for one-person companies. It brings projects, workspace memos, bookmarks, search, and revenue tracking into a single browser app. All data lives in your browser's `localStorage`, so there is no backend and no account required.
+SoloHQ is a browser dashboard for one-person companies. It brings projects, workspace memos, bookmarks, search, and revenue tracking into one workspace. It works without an account, while optional Google sign-in adds private cross-device workspace sync and per-project Google Docs notes.
 
 [![MIT License](https://img.shields.io/github/license/zhaolongfei-shareye/SoloHQ)](LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/zhaolongfei-shareye/SoloHQ/ci.yml?branch=main)](https://github.com/zhaolongfei-shareye/SoloHQ/actions/workflows/ci.yml)
@@ -12,7 +12,9 @@ SoloHQ is a local-first dashboard for one-person companies. It brings projects, 
 ## Features
 
 - Project board with Developing / Launched / Revenue Gen / Abandoned milestones
-- Per-project workspace memo
+- Per-project workspace memo with optional Google Docs sync
+- Creates a `SoloHQ` folder in the user's Google Drive and updates one same-named document per project
+- Saves each generated Google Docs URL back to its SoloHQ project
 - Delete projects from the editor with a confirmation dialog
 - Abandoned counter that only counts projects with real notes
 - Quick search across Google, Bing, DuckDuckGo, and GitHub
@@ -21,7 +23,7 @@ SoloHQ is a local-first dashboard for one-person companies. It brings projects, 
 - Four themes: Minimal Light, Midnight Dark, Aura Glass, Cyber Hacker
 - Drag to reorder dashboard widgets
 - JSON backup export and import
-- Local-first persistence with no backend
+- Local browser persistence plus optional private cloud workspace sync
 
 ## Tech Stack
 
@@ -53,11 +55,11 @@ npm test          # run Vitest
 
 ## Data & Privacy
 
-All project, bookmark, theme, and revenue data is stored locally in your browser under the `solo_*` localStorage keys. Use Settings > Data Backup to export a JSON backup or import one into another browser. No data is sent to any server.
+All project, bookmark, theme, and revenue data is stored locally in your browser under the `solo_*` localStorage keys. Use Settings > Data Backup to export a JSON backup or import one into another browser.
 
 On the agentsbin.com demo, data is stored in `sessionStorage` and resets when the window closes. Download or run the app locally to keep persistent data in `localStorage`.
 
-On the hosted SoloHQ home page, Google sign-in is optional. Signed-in users can sync one private workspace across devices; users choose whether to upload the current device or use the existing cloud copy. See [cloud sync setup](docs/cloud-sync.md) for the OAuth and storage details.
+On the hosted SoloHQ home page, Google sign-in is optional. Signed-in users can sync one private workspace across devices; users choose whether to upload the current device or use the existing cloud copy. When a user explicitly syncs a project note, SoloHQ asks for the narrow `drive.file` permission, creates a `SoloHQ` folder in that user's Drive, and continuously updates the corresponding project document. See [cloud sync setup](docs/cloud-sync.md) for OAuth, storage, and revocation details.
 
 ## Chrome New Tab extension
 

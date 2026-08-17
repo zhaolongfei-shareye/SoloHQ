@@ -24,6 +24,19 @@ const cloudTranslations = {
   ar: { settings: 'تفضيلات النظام', language: 'اللغة', languageHelp: 'ستستخدم عناصر المزامنة هذه اللغة على جميع الأجهزة المسجّل دخولها.', cloudTitle: 'النسخ الاحتياطي والمزامنة السحابية', optional: 'سجّل الدخول باستخدام Google لاستخدام مساحة عمل خاصة واحدة على أجهزة متعددة.', signIn: 'تسجيل الدخول', manage: 'إدارة المزامنة', continue: 'المتابعة باستخدام Google', intro: 'سجّل الدخول باستخدام Google للاحتفاظ بمساحة عمل SoloHQ خاصة واحدة على أجهزتك. يبقى الاستخدام المحلي متاحاً دون حساب.', found: 'تم العثور على مساحة عمل سحابية لـ {email}. اختر النسخة التي ستستخدمها.', useCloud: 'استخدام بيانات السحابة', useCloudHelp: 'يستبدل بيانات هذا الجهاز بأحدث نسخة احتياطية.', useDevice: 'استخدام هذا الجهاز', useDeviceHelp: 'يستبدل النسخة السحابية بالبيانات المحلية.', signedIn: 'تم تسجيل الدخول باسم {email}. يمكن مزامنة المشاريع والملاحظات والإشارات والتفضيلات وMRR بشكل خاص بين الأجهزة.', summary: 'تم تسجيل الدخول باسم {email}. {state}', inSync: 'مساحة العمل متزامنة.', choose: 'اختر طريقة مزامنة هذا الجهاز.', syncNow: 'مزامنة الآن', done: 'تم', delete: 'حذف البيانات السحابية', signOut: 'تسجيل الخروج', deleteConfirm: 'هل تريد حذف النسخة الاحتياطية السحابية؟ لن تتغير بيانات هذا الجهاز.', deleteFailed: 'تعذر حذف النسخة الاحتياطية السحابية. حاول مرة أخرى.', unavailable: 'المزامنة السحابية غير متاحة مؤقتاً. بياناتك المحلية آمنة.', saveFailed: 'تعذر حفظ مساحة العمل السحابية. حاول مرة أخرى.' }
 };
 
+const docsTranslations = {
+  en: { notConnected: 'Google Docs not connected', ready: 'Google Docs ready', sync: 'Sync Google Docs', connecting: 'Connecting Google Docs…', syncing: 'Syncing Google Docs…', synced: 'Google Docs synced', signIn: 'Sign in to sync Google Docs', failed: 'Google Docs sync failed. Please try again.', link: 'Google Docs' },
+  zh: { notConnected: 'Google Docs 未连接', ready: 'Google Docs 已就绪', sync: '同步 Google Docs', connecting: '正在连接 Google Docs…', syncing: '正在同步 Google Docs…', synced: 'Google Docs 已同步', signIn: '登录后同步 Google Docs', failed: 'Google Docs 同步失败，请重试。', link: 'Google Docs' },
+  ja: { notConnected: 'Google Docs は未接続', ready: 'Google Docs の準備完了', sync: 'Google Docs を同期', connecting: 'Google Docs に接続中…', syncing: 'Google Docs を同期中…', synced: 'Google Docs を同期しました', signIn: 'Google Docs を同期するにはログイン', failed: 'Google Docs の同期に失敗しました。もう一度お試しください。', link: 'Google Docs' },
+  ko: { notConnected: 'Google Docs가 연결되지 않음', ready: 'Google Docs 준비 완료', sync: 'Google Docs 동기화', connecting: 'Google Docs 연결 중…', syncing: 'Google Docs 동기화 중…', synced: 'Google Docs 동기화 완료', signIn: 'Google Docs를 동기화하려면 로그인하세요', failed: 'Google Docs 동기화에 실패했습니다. 다시 시도하세요.', link: 'Google Docs' },
+  es: { notConnected: 'Google Docs no está conectado', ready: 'Google Docs listo', sync: 'Sincronizar Google Docs', connecting: 'Conectando Google Docs…', syncing: 'Sincronizando Google Docs…', synced: 'Google Docs sincronizado', signIn: 'Inicia sesión para sincronizar Google Docs', failed: 'No se pudo sincronizar Google Docs. Inténtalo de nuevo.', link: 'Google Docs' },
+  fr: { notConnected: 'Google Docs non connecté', ready: 'Google Docs prêt', sync: 'Synchroniser Google Docs', connecting: 'Connexion à Google Docs…', syncing: 'Synchronisation de Google Docs…', synced: 'Google Docs synchronisé', signIn: 'Connectez-vous pour synchroniser Google Docs', failed: 'Échec de la synchronisation Google Docs. Réessayez.', link: 'Google Docs' },
+  de: { notConnected: 'Google Docs nicht verbunden', ready: 'Google Docs bereit', sync: 'Google Docs synchronisieren', connecting: 'Google Docs wird verbunden…', syncing: 'Google Docs wird synchronisiert…', synced: 'Google Docs synchronisiert', signIn: 'Zum Synchronisieren bei Google Docs anmelden', failed: 'Google Docs konnte nicht synchronisiert werden. Bitte erneut versuchen.', link: 'Google Docs' },
+  pt: { notConnected: 'Google Docs não conectado', ready: 'Google Docs pronto', sync: 'Sincronizar Google Docs', connecting: 'Conectando ao Google Docs…', syncing: 'Sincronizando Google Docs…', synced: 'Google Docs sincronizado', signIn: 'Entre para sincronizar o Google Docs', failed: 'Não foi possível sincronizar o Google Docs. Tente novamente.', link: 'Google Docs' },
+  ru: { notConnected: 'Google Docs не подключён', ready: 'Google Docs готов', sync: 'Синхронизировать Google Docs', connecting: 'Подключение к Google Docs…', syncing: 'Синхронизация Google Docs…', synced: 'Google Docs синхронизирован', signIn: 'Войдите, чтобы синхронизировать Google Docs', failed: 'Не удалось синхронизировать Google Docs. Повторите попытку.', link: 'Google Docs' },
+  ar: { notConnected: 'Google Docs غير متصل', ready: 'Google Docs جاهز', sync: 'مزامنة Google Docs', connecting: 'جارٍ الاتصال بـ Google Docs…', syncing: 'جارٍ مزامنة Google Docs…', synced: 'تمت مزامنة Google Docs', signIn: 'سجّل الدخول لمزامنة Google Docs', failed: 'تعذرت مزامنة Google Docs. حاول مرة أخرى.', link: 'Google Docs' }
+};
+
 const languageOptions = [
   ['en', 'English'], ['zh', '中文'], ['ja', '日本語'], ['ko', '한국어'], ['es', 'Español'],
   ['fr', 'Français'], ['de', 'Deutsch'], ['pt', 'Português'], ['ru', 'Русский'], ['ar', 'العربية']
@@ -219,9 +232,14 @@ export default function SoloDashboard() {
     const template = interfaceTranslations[language]?.[key] || interfaceTranslations.en[key] || key;
     return Object.entries(variables).reduce((value, [name, replacement]) => value.replace(`{${name}}`, replacement), template);
   }, [language]);
+  const td = useCallback((key) => docsTranslations[language]?.[key] || docsTranslations.en[key] || key, [language]);
   
   const [isSyncingNotes, setIsSyncingNotes] = useState(false);
-  const [syncStatusText, setSyncStatusText] = useState('In Sync');
+  const [syncStatusKey, setSyncStatusKey] = useState('notConnected');
+  const [pendingDocsProjectId, setPendingDocsProjectId] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('docs') === 'connected' ? params.get('project') : null;
+  });
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const [draggedItem, setDraggedItem] = useState(null);
@@ -492,27 +510,52 @@ export default function SoloDashboard() {
     setDraggedItem(null);
   };
 
-  const syncToNotebookLM = () => {
-    if (!activeProject) return;
+  const syncProjectToGoogleDocs = useCallback(async (project = activeProject) => {
+    if (!project) return;
+    if (!cloudUser) {
+      setSyncStatusKey('signIn');
+      startGoogleLogin();
+      return;
+    }
     setIsSyncingNotes(true);
-    setSyncStatusText('Exporting...');
-    setTimeout(() => {
-      const content = `Project: ${activeProject.name}\nStatus: ${activeProject.status}\n\n=== MEMO ===\n${activeProject.memo}`;
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${activeProject.name.replace(/\s+/g, '_')}_memo.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    setSyncStatusKey('syncing');
+    try {
+      const response = await fetch('/api/solohq/docs/sync', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project })
+      });
+      const result = await response.json();
+      if (response.status === 428 || result.error === 'docs_not_connected' || result.error === 'docs_reconnect_required') {
+        setSyncStatusKey('connecting');
+        window.location.assign(`/api/solohq/auth/docs?project=${encodeURIComponent(project.id)}`);
+        return;
+      }
+      if (!response.ok || !result.ok || !result.documentUrl) throw new Error(result.error || 'docs_sync_failed');
+      setProjects((current) => current.map((item) => item.id === project.id ? {
+        ...item,
+        links: { ...(item.links || {}), docs: result.documentUrl }
+      } : item));
+      setSyncStatusKey('synced');
+      window.setTimeout(() => setSyncStatusKey('ready'), 3000);
+    } catch {
+      setSyncStatusKey('failed');
+    } finally {
       setIsSyncingNotes(false);
-      setSyncStatusText('NotebookLM Ready');
-      setTimeout(() => setSyncStatusText('In Sync'), 3000);
-      window.open('https://notebooklm.google.com/', '_blank');
-    }, 800);
-  };
+    }
+  }, [activeProject, cloudUser, setProjects]);
+
+  useEffect(() => {
+    if (!pendingDocsProjectId || !cloudUser) return;
+    const project = projects.find((item) => item.id === pendingDocsProjectId);
+    setPendingDocsProjectId(null);
+    window.history.replaceState({}, '', window.location.pathname);
+    if (project) {
+      setActiveProjectId(project.id);
+      syncProjectToGoogleDocs(project);
+    }
+  }, [pendingDocsProjectId, cloudUser, projects, syncProjectToGoogleDocs]);
 
   // 导出 JSON 数据
   const handleExportJSON = () => {
@@ -739,10 +782,10 @@ export default function SoloDashboard() {
               </div>
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] font-bold flex items-center gap-1 ${isSyncingNotes ? 'text-blue-400 animate-pulse' : 'opacity-50'}`}>
-                  {isSyncingNotes ? <RefreshCw size={10} className="animate-spin" /> : <Check size={10} />} {syncStatusText}
+                  {isSyncingNotes ? <RefreshCw size={10} className="animate-spin" /> : <Check size={10} />} {td(syncStatusKey)}
                 </span>
-                <button onClick={syncToNotebookLM} className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold border transition-colors border-current/20 hover:bg-black/5 dark:hover:bg-white/10`} title="Export to NotebookLM Format">
-                  <Download size={12} /> {tu('sync')}
+                <button onClick={() => syncProjectToGoogleDocs()} className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold border transition-colors border-current/20 hover:bg-black/5 dark:hover:bg-white/10`} title={td('sync')}>
+                  <FileText size={12} /> {td('sync')}
                 </button>
               </div>
             </div>
@@ -814,7 +857,8 @@ export default function SoloDashboard() {
                     { key: 'github', label: tu('sourceCode'), icon: GitBranch },
                     { key: 'deploy', label: tu('liveServer'), icon: Cloud },
                     { key: 'demo', label: tu('publicDemo'), icon: PlayCircle },
-                    { key: 'analytics', label: tu('dataPanel'), icon: BarChart2 }
+                    { key: 'analytics', label: tu('dataPanel'), icon: BarChart2 },
+                    { key: 'docs', label: td('link'), icon: FileText }
                   ].map(field => {
                     const hasLink = !!activeProject.links[field.key];
                     if (!isEditing && !hasLink) return null;
