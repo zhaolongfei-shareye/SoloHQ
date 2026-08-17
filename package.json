@@ -26,7 +26,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && mkdir -p dist/server && cp server/index.js dist/server/index.js",
+    "extension:build": "vite build",
+    "extension:zip": "npm run extension:build && cd dist && zip -qr ../SoloHQ-extension.zip .",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",

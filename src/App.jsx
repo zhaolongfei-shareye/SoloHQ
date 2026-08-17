@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Settings, Plus, Clock, 
+  Settings, Plus, Clock, Copy,
   FileText, Globe, GitBranch, Cloud, PlayCircle, BarChart2, 
   Activity, Save, Download, Rocket, 
   DollarSign, XCircle, Edit3, Eye, Target, Trash2,
@@ -175,6 +175,8 @@ export default function SoloDashboard() {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showStartupGuide, setShowStartupGuide] = useState(false);
+  const [hasCopiedStartupUrl, setHasCopiedStartupUrl] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
   const [isSyncingNotes, setIsSyncingNotes] = useState(false);
@@ -267,6 +269,24 @@ export default function SoloDashboard() {
     if (!searchQuery.trim()) return;
     const engine = searchEngines.find(eng => eng.id === activeEngine) || searchEngines[0];
     window.open(`${engine.url}${encodeURIComponent(searchQuery)}`, '_blank');
+  };
+
+  const copyStartupUrl = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+    setHasCopiedStartupUrl(true);
+    window.setTimeout(() => setHasCopiedStartupUrl(false), 2500);
   };
 
   const handleDragStart = (e, id) => {
@@ -669,6 +689,9 @@ export default function SoloDashboard() {
             <Clock size={12} className="opacity-50" />
             {currentTime.toLocaleTimeString('en-US', { hour12: false })}
           </div>
+          <button onClick={() => setShowStartupGuide(true)} className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border border-current/15 transition-colors hover:bg-black/5 dark:hover:bg-white/10 ${currentTheme.textMuted}`}>
+            <Globe size={13} /> Set as startup page
+          </button>
           <button aria-label="Open settings" onClick={() => setIsSettingsOpen(true)} className={`p-1.5 rounded-full transition-transform hover:rotate-90 ${theme === 'glass' ? 'bg-white/10 hover:bg-white/20' : 'bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20'}`}>
             <Settings size={16} />
           </button>
@@ -699,6 +722,31 @@ export default function SoloDashboard() {
               <button onClick={() => setIsDeleteConfirmOpen(false)} className="px-4 py-2 rounded-lg text-xs font-bold border border-current/20 hover:bg-black/5 dark:hover:bg-white/10">Cancel</button>
               <button onClick={handleDeleteProject} className="px-4 py-2 rounded-lg text-xs font-bold bg-red-600 text-white hover:bg-red-500">Delete</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showStartupGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className={`w-full max-w-lg rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-black flex items-center gap-2"><Globe size={20} className={currentTheme.accentText} /> Set SoloHQ as your startup page</h3>
+              <button aria-label="Close startup page guide" onClick={() => setShowStartupGuide(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
+            </div>
+            <p className="text-sm opacity-70 leading-relaxed mb-5">This takes one minute and does not install anything. Chrome and Edge will open SoloHQ whenever you start the browser.</p>
+            <ol className="space-y-3 text-sm list-decimal list-inside opacity-85">
+              <li>Copy the SoloHQ link below.</li>
+              <li>Open browser <strong>Settings</strong> and find <strong>On startup</strong>.</li>
+              <li>Choose <strong>Open a specific page or pages</strong>, then paste the link.</li>
+            </ol>
+            <div className={`mt-5 p-3 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5 flex items-center gap-3`}>
+              <code className="min-w-0 flex-1 truncate text-xs opacity-70">{window.location.href}</code>
+              <button onClick={copyStartupUrl} className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold ${currentTheme.accent}`}>
+                {hasCopiedStartupUrl ? <Check size={14} /> : <Copy size={14} />}
+                {hasCopiedStartupUrl ? 'Copied' : 'Copy link'}
+              </button>
+            </div>
+            <p className="mt-4 text-xs opacity-50">New tabs remain controlled by your browser. This setting only changes the page opened when the browser starts.</p>
           </div>
         </div>
       )}

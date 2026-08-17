@@ -44,6 +44,8 @@ Open http://localhost:5173/ in your browser.
 ```bash
 npm run dev       # start the development server
 npm run build     # create a production build
+npm run extension:build # build the Chrome extension directory
+npm run extension:zip   # create SoloHQ-extension.zip for Chrome Web Store upload
 npm run preview   # preview the production build
 npm run lint      # run Oxlint
 npm test          # run Vitest
@@ -54,6 +56,16 @@ npm test          # run Vitest
 All project, bookmark, theme, and revenue data is stored locally in your browser under the `solo_*` localStorage keys. Use Settings > Data Backup to export a JSON backup or import one into another browser. No data is sent to any server.
 
 On the agentsbin.com demo, data is stored in `sessionStorage` and resets when the window closes. Download or run the app locally to keep persistent data in `localStorage`.
+
+## Chrome New Tab extension
+
+SoloHQ can replace Chrome's new tab page without requesting any browser permissions. Build a locally testable extension with:
+
+```bash
+npm run extension:build
+```
+
+Then open `chrome://extensions`, enable Developer mode, select **Load unpacked**, and choose the generated `dist` directory. For Chrome Web Store submission instructions and ready-to-use listing text, see [docs/chrome-web-store.md](docs/chrome-web-store.md).
 
 ## Deployment
 
