@@ -1,7 +1,7 @@
 {
   "name": "solohq",
-  "version": "0.1.0",
-  "description": "Local-first dashboard for one-person companies.",
+  "version": "0.2.0",
+  "description": "Cloud-synced dashboard for one-person companies with optional Google sign-in.",
   "type": "module",
   "license": "MIT",
   "author": "zhaolongfei-shareye",
