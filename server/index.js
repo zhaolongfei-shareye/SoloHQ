@@ -1,5 +1,9 @@
 export default {
   fetch(request, env) {
-    return env.ASSETS.fetch(request);
+    const url = new URL(request.url);
+    if (url.pathname === "/") {
+      url.pathname = "/index.html";
+    }
+    return env.ASSETS.fetch(new Request(url, request));
   },
 };
