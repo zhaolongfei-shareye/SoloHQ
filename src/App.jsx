@@ -137,7 +137,7 @@ const getIcon = (iconName) => {
 
 const DEFAULT_MEMO = '# Vision\n\n- Write goals here...';
 
-const isDemoMode = () =>
+const isDemoRoute = () =>
   typeof window !== 'undefined' &&
   window.location.pathname.startsWith('/solohq/demo/');
 
@@ -147,7 +147,7 @@ const hasProjectNotes = (project) => {
 };
 
 function useLocalStorage(key, initialValue) {
-  const storage = isDemoMode() ? window.sessionStorage : window.localStorage;
+  const storage = window.localStorage;
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = storage.getItem(key);
@@ -433,7 +433,6 @@ export default function SoloDashboard() {
   };
 
   useEffect(() => {
-    if (isDemoMode()) return undefined;
     let active = true;
     fetch('/api/solohq/session', { credentials: 'same-origin' })
       .then((response) => response.ok ? response.json() : null)
@@ -456,7 +455,7 @@ export default function SoloDashboard() {
   }, [cloudUser]);
 
   useEffect(() => {
-    if (cloudStatus !== 'synced' || isDemoMode()) return undefined;
+    if (cloudStatus !== 'synced') return undefined;
     if (cloudSkipNextSyncRef.current) {
       cloudSkipNextSyncRef.current = false;
       return undefined;
@@ -849,11 +848,9 @@ export default function SoloDashboard() {
 
   return (
     <div className={`min-h-screen transition-colors duration-500 flex flex-col font-sans ${currentTheme.bg}`}>
-      {isDemoMode() && (
+      {isDemoRoute() && (
         <div className="w-full px-4 py-2 text-center text-xs font-bold bg-amber-500/10 border-b border-amber-500/25 text-amber-400">
-          Demo data resets when you close this window. Use it for testing only.{" "}
-          <a href="https://github.com/zhaolongfei-shareye/SoloHQ" target="_blank" rel="noreferrer" className="underline">Download SoloHQ</a>{" "}
-          to keep your data locally.
+          Demo uses the full SoloHQ experience, including optional Google sign-in and private cloud sync. Your local data stays available without an account.
         </div>
       )}
       <nav className={`sticky top-0 z-40 px-6 py-3 flex items-center justify-between ${currentTheme.header}`}>
@@ -985,7 +982,7 @@ export default function SoloDashboard() {
                 </select>
                 <p className="mt-2 text-[10px] opacity-60">{tc('languageHelp')}</p>
               </div>
-              {!isDemoMode() && (
+              {(
                 <div className={`p-4 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5`}>
                   <div className="flex items-start justify-between gap-4">
                     <div>
