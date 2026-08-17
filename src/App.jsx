@@ -778,7 +778,7 @@ export default function SoloDashboard() {
                       <div className="grid grid-cols-2 gap-2">
                         {['developing', 'launched', 'revenue', 'abandoned'].map(s => (
                           <button key={s} onClick={() => updateProject(activeProject.id, { status: s })} className={`py-2 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 border transition-all ${activeProject.status === s ? `border-current ${getStatusColor(s)} bg-black/10 dark:bg-white/10 shadow-sm` : 'border-transparent opacity-50 bg-black/5 dark:bg-white/5 hover:opacity-100'}`}>
-                            {getStatusIcon(s)} <span className="capitalize">{s}</span>
+                            {getStatusIcon(s)} <span>{getStatusLabel(s)}</span>
                           </button>
                         ))}
                       </div>
@@ -789,7 +789,7 @@ export default function SoloDashboard() {
                     <h3 className="text-2xl font-black mb-2 leading-tight break-words">{activeProject.name}</h3>
                     <div className="flex items-center gap-2">
                       <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/5 dark:bg-white/10 border border-current/10 ${getStatusColor(activeProject.status)}`}>
-                        {getStatusIcon(activeProject.status)} <span className="capitalize">{activeProject.status}</span>
+                        {getStatusIcon(activeProject.status)} <span>{getStatusLabel(activeProject.status)}</span>
                       </div>
                     </div>
                   </div>
