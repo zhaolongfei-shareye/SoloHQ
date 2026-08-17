@@ -57,6 +57,8 @@ All project, bookmark, theme, and revenue data is stored locally in your browser
 
 On the agentsbin.com demo, data is stored in `sessionStorage` and resets when the window closes. Download or run the app locally to keep persistent data in `localStorage`.
 
+On the hosted SoloHQ home page, Google sign-in is optional. Signed-in users can sync one private workspace across devices; users choose whether to upload the current device or use the existing cloud copy. See [cloud sync setup](docs/cloud-sync.md) for the OAuth and storage details.
+
 ## Chrome New Tab extension
 
 SoloHQ can replace Chrome's new tab page without requesting any browser permissions. Build a locally testable extension with:
