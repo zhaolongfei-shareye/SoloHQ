@@ -997,7 +997,7 @@ export default function SoloDashboard() {
                   {cloudUser && <div className="mt-3 flex gap-3 text-[10px] font-bold"><button onClick={deleteCloudWorkspace} className="opacity-60 hover:opacity-100">{tc('delete')}</button><button onClick={disconnectCloud} className="opacity-60 hover:opacity-100">{tc('signOut')}</button></div>}
                 </div>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className={`p-4 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5`}>
                    <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2 opacity-80"><Database size={14} className="text-blue-500"/> {tu('dataBackup')}</h3>
                    <div className="space-y-3">
