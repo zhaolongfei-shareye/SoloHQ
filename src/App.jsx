@@ -116,7 +116,7 @@ const DEFAULT_MEMO = '# Vision\n\n- Write goals here...';
 
 const isDemoMode = () =>
   typeof window !== 'undefined' &&
-  (window.location.hostname.includes('agentsbin.com') || window.location.pathname.includes('/solohq/demo/'));
+  window.location.pathname.startsWith('/solohq/demo/');
 
 const hasProjectNotes = (project) => {
   const memo = String((project && project.memo) || '').trim();
