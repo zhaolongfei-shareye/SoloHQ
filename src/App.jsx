@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Settings, Plus, Clock, Copy,
   FileText, Globe, GitBranch, Cloud, PlayCircle, BarChart2, 
@@ -170,6 +170,15 @@ export default function SoloDashboard() {
     mode: 'manual', manualMrr: 4500, stripeApiKey: '', autoMrrValue: 0
   });
 
+  const [cloudUser, setCloudUser] = useState(null);
+  const [cloudStatus, setCloudStatus] = useState('local');
+  const [cloudRevision, setCloudRevision] = useState(0);
+  const [cloudWorkspace, setCloudWorkspace] = useState(null);
+  const [cloudError, setCloudError] = useState('');
+  const [showCloudSetup, setShowCloudSetup] = useState(false);
+  const cloudTimerRef = useRef(null);
+  const cloudSkipNextSyncRef = useRef(false);
+
   const [activeProjectId, setActiveProjectId] = useState(projects.length > 0 ? projects[0].id : null);
   const isNewProjectRef = useRef(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -271,6 +280,106 @@ export default function SoloDashboard() {
     window.open(`${engine.url}${encodeURIComponent(searchQuery)}`, '_blank');
   };
 
+  const workspaceSnapshot = useCallback(() => ({
+    projects,
+    bookmarks: bookmarksData,
+    theme,
+    layoutOrder,
+    activeEngine,
+    activeGoogleApps,
+    showStats,
+    deletedProjectsCount,
+    revenueConfig
+  }), [projects, bookmarksData, theme, layoutOrder, activeEngine, activeGoogleApps, showStats, deletedProjectsCount, revenueConfig]);
+
+  const applyWorkspaceSnapshot = (data) => {
+    if (!data || typeof data !== 'object') return;
+    cloudSkipNextSyncRef.current = true;
+    if (Array.isArray(data.projects)) setProjects(data.projects);
+    if (Array.isArray(data.bookmarks)) setBookmarksData(data.bookmarks);
+    if (typeof data.theme === 'string') setTheme(data.theme);
+    if (Array.isArray(data.layoutOrder)) setLayoutOrder(data.layoutOrder);
+    if (typeof data.activeEngine === 'string') setActiveEngine(data.activeEngine);
+    if (Array.isArray(data.activeGoogleApps)) setActiveGoogleApps(data.activeGoogleApps);
+    if (typeof data.showStats === 'boolean') setShowStats(data.showStats);
+    if (typeof data.deletedProjectsCount === 'number') setDeletedProjectsCount(data.deletedProjectsCount);
+    if (data.revenueConfig && typeof data.revenueConfig === 'object') setRevenueConfig(data.revenueConfig);
+  };
+
+  const loadCloudWorkspace = useCallback(async () => {
+    if (!cloudUser) return;
+    setCloudError('');
+    try {
+      const response = await fetch('/api/solohq/sync', { credentials: 'same-origin' });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || 'sync_unavailable');
+      setCloudWorkspace(result.workspace);
+      setCloudRevision(Number(result.workspace?.revision || 0));
+      setCloudStatus(result.workspace ? 'needs-choice' : 'ready');
+    } catch {
+      setCloudStatus('error');
+      setCloudError('Cloud sync is temporarily unavailable. Your local data is safe.');
+    }
+  }, [cloudUser]);
+
+  const uploadWorkspace = useCallback(async (force = false) => {
+    if (!cloudUser) return;
+    setCloudStatus('syncing');
+    setCloudError('');
+    try {
+      const response = await fetch('/api/solohq/sync', {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: workspaceSnapshot(), revision: cloudRevision, force })
+      });
+      const result = await response.json();
+      if (response.status === 409) {
+        await loadCloudWorkspace();
+        return;
+      }
+      if (!response.ok || !result.ok) throw new Error(result.error || 'sync_failed');
+      cloudSkipNextSyncRef.current = true;
+      setCloudRevision(Number(result.revision || cloudRevision));
+      setCloudWorkspace(null);
+      setCloudStatus('synced');
+      setShowCloudSetup(false);
+    } catch {
+      setCloudStatus('error');
+      setCloudError('Could not save your cloud workspace. Please try again.');
+    }
+  }, [cloudUser, cloudRevision, loadCloudWorkspace, workspaceSnapshot]);
+
+  const downloadCloudWorkspace = () => {
+    if (!cloudWorkspace?.data) return;
+    applyWorkspaceSnapshot(cloudWorkspace.data);
+    setCloudRevision(Number(cloudWorkspace.revision || 0));
+    setCloudWorkspace(null);
+    setCloudStatus('synced');
+    setShowCloudSetup(false);
+  };
+
+  const startGoogleLogin = () => {
+    window.location.assign('/api/solohq/auth/google');
+  };
+
+  const deleteCloudWorkspace = async () => {
+    if (!window.confirm('Delete your cloud backup? Data on this device will stay unchanged.')) return;
+    try {
+      const response = await fetch('/api/solohq/sync', { method: 'DELETE', credentials: 'same-origin' });
+      if (!response.ok) throw new Error('delete_failed');
+      setCloudWorkspace(null);
+      setCloudRevision(0);
+      setCloudStatus('ready');
+    } catch {
+      setCloudError('Could not delete the cloud backup. Please try again.');
+    }
+  };
+
+  const disconnectCloud = () => {
+    window.location.assign('/api/solohq/auth/logout');
+  };
+
   const copyStartupUrl = async () => {
     const url = window.location.href;
     try {
@@ -288,6 +397,40 @@ export default function SoloDashboard() {
     setHasCopiedStartupUrl(true);
     window.setTimeout(() => setHasCopiedStartupUrl(false), 2500);
   };
+
+  useEffect(() => {
+    if (isDemoMode()) return undefined;
+    let active = true;
+    fetch('/api/solohq/session', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => {
+        if (!active || !result?.user) return;
+        setCloudUser(result.user);
+        setCloudStatus('checking');
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!cloudUser) return;
+    loadCloudWorkspace();
+  }, [cloudUser, loadCloudWorkspace]);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('sync') === 'choose') setShowCloudSetup(true);
+  }, [cloudUser]);
+
+  useEffect(() => {
+    if (cloudStatus !== 'synced' || isDemoMode()) return undefined;
+    if (cloudSkipNextSyncRef.current) {
+      cloudSkipNextSyncRef.current = false;
+      return undefined;
+    }
+    window.clearTimeout(cloudTimerRef.current);
+    cloudTimerRef.current = window.setTimeout(() => uploadWorkspace(), 900);
+    return () => window.clearTimeout(cloudTimerRef.current);
+  }, [projects, bookmarksData, theme, layoutOrder, activeEngine, activeGoogleApps, showStats, deletedProjectsCount, revenueConfig, cloudStatus, uploadWorkspace]);
 
   const handleDragStart = (e, id) => {
     setDraggedItem(id);
@@ -751,6 +894,40 @@ export default function SoloDashboard() {
         </div>
       )}
 
+      {showCloudSetup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className={`w-full max-w-lg rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-black flex items-center gap-2"><Cloud size={20} className={currentTheme.accentText} /> Cloud backup & sync</h3>
+              <button aria-label="Close cloud sync" onClick={() => setShowCloudSetup(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
+            </div>
+            {!cloudUser ? (
+              <>
+                <p className="text-sm opacity-70 leading-relaxed">Sign in with Google to keep one private SoloHQ workspace across your devices. Local-only use remains available without an account.</p>
+                <button onClick={startGoogleLogin} className={`mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold ${currentTheme.accent}`}><Cloud size={16} /> Continue with Google</button>
+              </>
+            ) : cloudStatus === 'needs-choice' ? (
+              <>
+                <p className="text-sm opacity-70 leading-relaxed">A cloud workspace was found for <strong>{cloudUser.email}</strong>. Choose which copy should become your current workspace.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+                  <button onClick={downloadCloudWorkspace} className="p-4 text-left rounded-xl border border-current/15 hover:bg-black/5 dark:hover:bg-white/10"><Download size={16} className="mb-2" /><strong className="block text-sm">Use cloud data</strong><span className="text-xs opacity-60">Replace this device with your latest backup.</span></button>
+                  <button onClick={() => uploadWorkspace(true)} className={`p-4 text-left rounded-xl ${currentTheme.accent}`}><Upload size={16} className="mb-2" /><strong className="block text-sm">Use this device</strong><span className="text-xs opacity-75">Replace the cloud backup with local data.</span></button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm opacity-70 leading-relaxed">Signed in as <strong>{cloudUser.email}</strong>. Your projects, notes, bookmarks, preferences, and MRR can sync privately between devices.</p>
+                <div className="mt-5 flex gap-3">
+                  <button onClick={() => uploadWorkspace()} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-bold ${currentTheme.accent}`}><RefreshCw size={15} /> Sync now</button>
+                  <button onClick={() => setShowCloudSetup(false)} className="px-4 py-3 rounded-lg text-sm font-bold border border-current/15">Done</button>
+                </div>
+              </>
+            )}
+            {cloudError && <p className="mt-4 text-xs text-red-400">{cloudError}</p>}
+          </div>
+        </div>
+      )}
+
       {isSettingsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div className={`w-full max-w-2xl rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide border ${currentTheme.widget}`}>
@@ -767,6 +944,18 @@ export default function SoloDashboard() {
                   ))}
                 </div>
               </div>
+              {!isDemoMode() && (
+                <div className={`p-4 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-xs font-bold uppercase mb-1 flex items-center gap-2 opacity-80"><Cloud size={14} className="text-emerald-500"/> Cloud backup & sync</h3>
+                      <p className="text-[10px] opacity-60 leading-relaxed">{cloudUser ? `Signed in as ${cloudUser.email}. ${cloudStatus === 'synced' ? 'Your workspace is in sync.' : 'Choose how to sync this device.'}` : 'Optional Google sign-in to keep one private workspace across devices.'}</p>
+                    </div>
+                    <button onClick={() => setShowCloudSetup(true)} className={`shrink-0 px-3 py-2 rounded text-xs font-bold ${currentTheme.accent}`}>{cloudUser ? 'Manage sync' : 'Sign in'}</button>
+                  </div>
+                  {cloudUser && <div className="mt-3 flex gap-3 text-[10px] font-bold"><button onClick={deleteCloudWorkspace} className="opacity-60 hover:opacity-100">Delete cloud data</button><button onClick={disconnectCloud} className="opacity-60 hover:opacity-100">Sign out</button></div>}
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className={`p-4 rounded-xl border border-current/10 bg-black/5 dark:bg-white/5`}>
                    <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2 opacity-80"><Database size={14} className="text-blue-500"/> Data Backup</h3>
