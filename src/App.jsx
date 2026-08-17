@@ -895,7 +895,7 @@ export default function SoloDashboard() {
       )}
 
       {showCloudSetup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
           <div className={`w-full max-w-lg rounded-2xl p-6 shadow-2xl border ${currentTheme.widget}`}>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-black flex items-center gap-2"><Cloud size={20} className={currentTheme.accentText} /> Cloud backup & sync</h3>
