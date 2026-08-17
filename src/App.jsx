@@ -159,6 +159,19 @@ const hasProjectNotes = (project) => {
   return memo.length > 0 && memo !== DEFAULT_MEMO;
 };
 
+const compactGoogleDocsUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    const documentId = parts[parts.indexOf('d') + 1] || '';
+    const suffix = parts.at(-1) || '';
+    if (documentId) return `${parsed.host}/...${documentId.slice(-6)}/${suffix}`;
+    return `${parsed.host}${parsed.pathname}`;
+  } catch {
+    return String(url).length > 34 ? `${String(url).slice(0, 18)}...${String(url).slice(-10)}` : String(url);
+  }
+};
+
 function useLocalStorage(key, initialValue) {
   const storage = window.localStorage;
   const [storedValue, setStoredValue] = useState(() => {
@@ -776,9 +789,22 @@ export default function SoloDashboard() {
         </div>
         <div className={`flex-1 flex flex-col rounded-xl overflow-hidden min-h-[400px] shadow-sm border ${currentTheme.widget}`}>
             <div className={`p-3 px-4 border-b border-current/10 flex justify-between items-center bg-black/5 dark:bg-white/5`}>
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 items-center gap-2">
                 <FileText size={16} className={currentTheme.accentText} />
-                <span className="font-bold text-sm truncate">{activeProject.name} <span className="opacity-40 font-normal">| {tu('workspaceMemo')}</span></span>
+                <span className="min-w-0 font-bold text-sm truncate">{activeProject.name} <span className="opacity-40 font-normal">| {tu('workspaceMemo')}</span></span>
+                {activeProject.links?.docs && (
+                  <a
+                    href={activeProject.links.docs}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={activeProject.links.docs}
+                    aria-label={td('link')}
+                    className="shrink min-w-0 max-w-[150px] sm:max-w-[240px] inline-flex items-center gap-1 text-[10px] font-mono opacity-70 hover:opacity-100 hover:underline transition-opacity cursor-pointer"
+                  >
+                    <FileText size={11} className={currentTheme.accentText} />
+                    <span className="truncate">{compactGoogleDocsUrl(activeProject.links.docs)}</span>
+                  </a>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span className={`text-[10px] font-bold flex items-center gap-1 ${isSyncingNotes ? 'text-blue-400 animate-pulse' : 'opacity-50'}`}>
