@@ -47,4 +47,25 @@ describe('SoloHQ', () => {
 
     expect(screen.getByText(/will not affect the abandoned count/i)).toBeInTheDocument()
   })
+
+  it('manages bookmarks and prevents deleting a non-empty category', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Manage bookmarks' }))
+
+    expect(screen.getByText(/Drag bookmarks to reorder/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Delete AI Agents' })).toBeDisabled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Add category' }))
+    expect(screen.getByText(/Drop bookmarks here, or delete this empty category/i)).toBeInTheDocument()
+  })
+
+  it('opens quick-app settings above the dashboard content', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Configure quick apps' }))
+
+    expect(screen.getByText('Quick Apps')).toBeInTheDocument()
+    expect(screen.getByLabelText('Close quick apps settings')).toBeInTheDocument()
+  })
 })

@@ -37,6 +37,19 @@ const docsTranslations = {
   ar: { notConnected: 'Google Docs غير متصل', ready: 'Google Docs جاهز', sync: 'مزامنة Google Docs', connecting: 'جارٍ الاتصال بـ Google Docs…', syncing: 'جارٍ مزامنة Google Docs…', synced: 'تمت مزامنة Google Docs', signIn: 'سجّل الدخول لمزامنة Google Docs', failed: 'تعذرت مزامنة Google Docs. حاول مرة أخرى.', link: 'Google Docs' }
 };
 
+const bookmarkTranslations = {
+  en: { manage: 'Manage bookmarks', help: 'Drag bookmarks to reorder or move them between categories. A category can be deleted only when it is empty.', addBookmark: 'Add bookmark', addCategory: 'Add category', name: 'Name', url: 'URL', empty: 'Drop bookmarks here, or delete this empty category.', deleteEmptyOnly: 'Remove all bookmarks before deleting this category.', close: 'Close bookmark manager' },
+  zh: { manage: '管理书签', help: '拖拽书签可排序或移动到其他分类。分类清空后才可删除。', addBookmark: '添加书签', addCategory: '添加分类', name: '名称', url: '网址', empty: '将书签拖到这里，或删除这个空分类。', deleteEmptyOnly: '请先删除该分类下的所有书签。', close: '关闭书签管理' },
+  ja: { manage: 'ブックマークを管理', help: 'ブックマークをドラッグして並べ替えたり、別のカテゴリへ移動できます。カテゴリは空の場合のみ削除できます。', addBookmark: 'ブックマークを追加', addCategory: 'カテゴリを追加', name: '名前', url: 'URL', empty: 'ここにブックマークをドロップするか、この空のカテゴリを削除します。', deleteEmptyOnly: 'カテゴリを削除する前に、すべてのブックマークを削除してください。', close: 'ブックマーク管理を閉じる' },
+  ko: { manage: '북마크 관리', help: '북마크를 끌어 순서를 바꾸거나 다른 카테고리로 이동할 수 있습니다. 카테고리는 비어 있을 때만 삭제할 수 있습니다.', addBookmark: '북마크 추가', addCategory: '카테고리 추가', name: '이름', url: 'URL', empty: '여기에 북마크를 놓거나 빈 카테고리를 삭제하세요.', deleteEmptyOnly: '카테고리를 삭제하려면 모든 북마크를 먼저 제거하세요.', close: '북마크 관리 닫기' },
+  es: { manage: 'Administrar marcadores', help: 'Arrastra marcadores para ordenarlos o moverlos entre categorías. Una categoría solo puede eliminarse cuando está vacía.', addBookmark: 'Añadir marcador', addCategory: 'Añadir categoría', name: 'Nombre', url: 'URL', empty: 'Suelta marcadores aquí o elimina esta categoría vacía.', deleteEmptyOnly: 'Elimina todos los marcadores antes de borrar esta categoría.', close: 'Cerrar administrador de marcadores' },
+  fr: { manage: 'Gérer les favoris', help: 'Faites glisser les favoris pour les réorganiser ou les déplacer entre catégories. Une catégorie ne peut être supprimée que si elle est vide.', addBookmark: 'Ajouter un favori', addCategory: 'Ajouter une catégorie', name: 'Nom', url: 'URL', empty: 'Déposez des favoris ici ou supprimez cette catégorie vide.', deleteEmptyOnly: 'Supprimez tous les favoris avant de supprimer cette catégorie.', close: 'Fermer la gestion des favoris' },
+  de: { manage: 'Lesezeichen verwalten', help: 'Ziehe Lesezeichen zum Sortieren oder Verschieben zwischen Kategorien. Eine Kategorie kann nur gelöscht werden, wenn sie leer ist.', addBookmark: 'Lesezeichen hinzufügen', addCategory: 'Kategorie hinzufügen', name: 'Name', url: 'URL', empty: 'Lesezeichen hier ablegen oder diese leere Kategorie löschen.', deleteEmptyOnly: 'Entferne alle Lesezeichen, bevor du diese Kategorie löschst.', close: 'Lesezeichenverwaltung schließen' },
+  pt: { manage: 'Gerenciar favoritos', help: 'Arraste favoritos para reordenar ou movê-los entre categorias. Uma categoria só pode ser excluída quando estiver vazia.', addBookmark: 'Adicionar favorito', addCategory: 'Adicionar categoria', name: 'Nome', url: 'URL', empty: 'Solte favoritos aqui ou exclua esta categoria vazia.', deleteEmptyOnly: 'Remova todos os favoritos antes de excluir esta categoria.', close: 'Fechar gerenciador de favoritos' },
+  ru: { manage: 'Управление закладками', help: 'Перетаскивайте закладки для сортировки или перемещения между категориями. Категорию можно удалить, только когда она пуста.', addBookmark: 'Добавить закладку', addCategory: 'Добавить категорию', name: 'Название', url: 'URL', empty: 'Перетащите закладки сюда или удалите эту пустую категорию.', deleteEmptyOnly: 'Удалите все закладки перед удалением этой категории.', close: 'Закрыть управление закладками' },
+  ar: { manage: 'إدارة الإشارات المرجعية', help: 'اسحب الإشارات لإعادة ترتيبها أو نقلها بين الفئات. لا يمكن حذف الفئة إلا عندما تكون فارغة.', addBookmark: 'إضافة إشارة', addCategory: 'إضافة فئة', name: 'الاسم', url: 'الرابط', empty: 'أفلت الإشارات هنا أو احذف هذه الفئة الفارغة.', deleteEmptyOnly: 'أزل كل الإشارات قبل حذف هذه الفئة.', close: 'إغلاق إدارة الإشارات' }
+};
+
 const languageOptions = [
   ['en', 'English'], ['zh', '中文'], ['ja', '日本語'], ['ko', '한국어'], ['es', 'Español'],
   ['fr', 'Français'], ['de', 'Deutsch'], ['pt', 'Português'], ['ru', 'Русский'], ['ar', 'العربية']
@@ -212,6 +225,9 @@ export default function SoloDashboard() {
   
   const [activeGoogleApps, setActiveGoogleApps] = useLocalStorage('solo_google_apps_v8', ['gmail', 'gemini', 'drive']);
   const [showAppsSetup, setShowAppsSetup] = useState(false);
+  const [isBookmarkManagerOpen, setIsBookmarkManagerOpen] = useState(false);
+  const [draggedBookmark, setDraggedBookmark] = useState(null);
+  const draggedBookmarkRef = useRef(null);
 
   const [showStats, setShowStats] = useLocalStorage('solo_show_stats_v8', false);
   const [deletedProjectsCount, setDeletedProjectsCount] = useLocalStorage('solo_deleted_count_v8', 0);
@@ -246,6 +262,7 @@ export default function SoloDashboard() {
     return Object.entries(variables).reduce((value, [name, replacement]) => value.replace(`{${name}}`, replacement), template);
   }, [language]);
   const td = useCallback((key) => docsTranslations[language]?.[key] || docsTranslations.en[key] || key, [language]);
+  const tb = useCallback((key) => bookmarkTranslations[language]?.[key] || bookmarkTranslations.en[key] || key, [language]);
   
   const [isSyncingNotes, setIsSyncingNotes] = useState(false);
   const [syncStatusKey, setSyncStatusKey] = useState('notConnected');
@@ -341,6 +358,79 @@ export default function SoloDashboard() {
     if (!searchQuery.trim()) return;
     const engine = searchEngines.find(eng => eng.id === activeEngine) || searchEngines[0];
     window.open(`${engine.url}${encodeURIComponent(searchQuery)}`, '_blank');
+  };
+
+  const updateBookmarkCategory = (categoryId, updates) => {
+    setBookmarksData(current => current.map(category => category.id === categoryId ? { ...category, ...updates } : category));
+  };
+
+  const updateBookmark = (categoryId, bookmarkId, updates) => {
+    setBookmarksData(current => current.map(category => category.id === categoryId ? {
+      ...category,
+      links: category.links.map(bookmark => bookmark.id === bookmarkId ? { ...bookmark, ...updates } : bookmark)
+    } : category));
+  };
+
+  const addBookmark = (categoryId) => {
+    setBookmarksData(current => current.map(category => category.id === categoryId ? {
+      ...category,
+      links: [...category.links, { id: `bookmark_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, name: '', url: '' }]
+    } : category));
+  };
+
+  const deleteBookmark = (categoryId, bookmarkId) => {
+    setBookmarksData(current => current.map(category => category.id === categoryId ? {
+      ...category,
+      links: category.links.filter(bookmark => bookmark.id !== bookmarkId)
+    } : category));
+  };
+
+  const addBookmarkCategory = () => {
+    setBookmarksData(current => [...current, {
+      id: `category_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      title: '',
+      icon: 'Star',
+      links: []
+    }]);
+  };
+
+  const deleteBookmarkCategory = (categoryId) => {
+    setBookmarksData(current => current.filter(category => category.id !== categoryId || category.links.length > 0));
+  };
+
+  const moveBookmark = (targetCategoryId, targetIndex) => {
+    const source = draggedBookmarkRef.current;
+    if (!source) return;
+    const { categoryId: sourceCategoryId, bookmarkId } = source;
+    if (sourceCategoryId === targetCategoryId) {
+      const sourceCategory = bookmarksData.find(category => category.id === sourceCategoryId);
+      const sourceIndex = sourceCategory?.links.findIndex(bookmark => bookmark.id === bookmarkId) ?? -1;
+      if (sourceIndex < 0 || sourceIndex === targetIndex || sourceIndex + 1 === targetIndex) {
+        setDraggedBookmark(null);
+        draggedBookmarkRef.current = null;
+        return;
+      }
+    }
+    setBookmarksData(current => {
+      const sourceCategory = current.find(category => category.id === sourceCategoryId);
+      const movingBookmark = sourceCategory?.links.find(bookmark => bookmark.id === bookmarkId);
+      if (!movingBookmark) return current;
+      const withoutBookmark = current.map(category => category.id === sourceCategoryId ? {
+        ...category,
+        links: category.links.filter(bookmark => bookmark.id !== bookmarkId)
+      } : category);
+      return withoutBookmark.map(category => {
+        if (category.id !== targetCategoryId) return category;
+        const insertionIndex = sourceCategoryId === targetCategoryId && sourceCategory.links.findIndex(bookmark => bookmark.id === bookmarkId) < targetIndex
+          ? Math.max(0, targetIndex - 1)
+          : targetIndex;
+        const links = [...category.links];
+        links.splice(Math.min(Math.max(insertionIndex, 0), links.length), 0, movingBookmark);
+        return { ...category, links };
+      });
+    });
+    setDraggedBookmark(null);
+    draggedBookmarkRef.current = null;
   };
 
   const workspaceSnapshot = useCallback(() => ({
@@ -628,9 +718,9 @@ export default function SoloDashboard() {
         <GripHorizontal size={14} />
       </div>
       <div className="absolute top-3 right-3 hidden sm:block">
-        <div className={`opacity-30 hover:opacity-100 transition-opacity text-[10px] uppercase font-bold flex items-center gap-1 cursor-help ${currentTheme.textMuted}`} title="Syncs natively when installed as Chrome Extension">
-           <Star size={10} /> Syncs with System
-        </div>
+        <button onClick={() => setIsBookmarkManagerOpen(true)} className={`opacity-60 hover:opacity-100 transition-opacity text-[10px] uppercase font-bold flex items-center gap-1.5 rounded-md px-2 py-1 hover:bg-black/5 dark:hover:bg-white/10 ${currentTheme.textMuted}`} title={tb('manage')}>
+           <Edit3 size={11} /> {tb('manage')}
+        </button>
       </div>
       <div className="pl-6 flex flex-col gap-2 sm:mt-1">
         {bookmarksData.map(category => (
@@ -675,26 +765,10 @@ export default function SoloDashboard() {
             <app.icon size={18} className="opacity-80 hover:opacity-100" />
           </a>
         ))}
-        <div className="relative">
-          <button onClick={() => setShowAppsSetup(!showAppsSetup)} className={`p-2 rounded-full transition-all border border-dashed opacity-50 hover:opacity-100 ${theme === 'glass' ? 'border-white/40' : 'border-current/40'}`}>
+        <div>
+          <button aria-label="Configure quick apps" onClick={() => setShowAppsSetup(!showAppsSetup)} className={`p-2 rounded-full transition-all border border-dashed opacity-50 hover:opacity-100 ${theme === 'glass' ? 'border-white/40' : 'border-current/40'}`}>
             <Settings2 size={16} />
           </button>
-          {showAppsSetup && (
-            <div className={`absolute top-full right-0 mt-2 w-48 p-3 rounded-xl z-50 shadow-2xl border ${theme === 'glass' ? 'bg-slate-900/90 backdrop-blur-xl border-white/20' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'}`}>
-              <h4 className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${theme === 'glass' ? 'text-white/50' : 'text-zinc-500'}`}>{tu('quickApps')}</h4>
-              <div className="space-y-1">
-                {availableGoogleApps.map(app => (
-                  <label key={app.id} className="flex items-center gap-2 text-xs p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
-                    <input type="checkbox" checked={activeGoogleApps.includes(app.id)} onChange={(e) => {
-                        if (e.target.checked) setActiveGoogleApps([...activeGoogleApps, app.id]);
-                        else setActiveGoogleApps(activeGoogleApps.filter(id => id !== app.id));
-                      }} className="rounded border-gray-400" />
-                    <app.icon size={12} className="opacity-70" /> <span>{app.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -916,6 +990,47 @@ export default function SoloDashboard() {
 
   const widgetMap = { bookmarks: renderBookmarks, search: renderSearch, project_board: renderProjectBoard, workspace: renderWorkspace };
 
+  const renderBookmarkManager = () => isBookmarkManagerOpen && (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className={`w-full max-w-3xl max-h-[calc(100vh-2rem)] overflow-y-auto rounded-2xl shadow-2xl border ${currentTheme.widget}`}>
+        <div className="sticky top-0 z-10 flex justify-between items-center p-5 border-b border-current/10 bg-inherit">
+          <h3 className="text-lg font-black flex items-center gap-2"><Star size={19} className={currentTheme.accentText} /> {tb('manage')}</h3>
+          <button aria-label={tb('close')} onClick={() => setIsBookmarkManagerOpen(false)} className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"><XCircle size={18} /></button>
+        </div>
+        <p className="px-5 pt-4 text-sm opacity-70 leading-relaxed">{tb('help')}</p>
+        <div className="p-5 pt-3 space-y-3">
+          {bookmarksData.map(category => {
+            const canDelete = category.links.length === 0;
+            return (
+              <section key={category.id} onDragOver={(event) => event.preventDefault()} onDrop={() => moveBookmark(category.id, category.links.length)} className="rounded-xl border border-current/10 bg-black/5 dark:bg-white/5 p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <input value={category.title} onChange={(event) => updateBookmarkCategory(category.id, { title: event.target.value })} placeholder={tb('name')} className={`w-full max-w-[220px] px-3 py-2 text-sm font-bold rounded-lg border ${currentTheme.input}`} />
+                  <button aria-label={`${tu('delete')} ${category.title || tb('name')}`} disabled={!canDelete} title={canDelete ? tu('delete') : tb('deleteEmptyOnly')} onClick={() => deleteBookmarkCategory(category.id)} className={`ml-auto p-2 rounded-lg transition-colors ${canDelete ? 'text-red-500 hover:bg-red-500/10' : 'opacity-25 cursor-not-allowed'}`}><Trash2 size={15} /></button>
+                </div>
+                <div className="space-y-2">
+                  {category.links.map((bookmark, index) => (
+                    <div key={bookmark.id} draggable onDragStart={() => { const source = { categoryId: category.id, bookmarkId: bookmark.id }; draggedBookmarkRef.current = source; setDraggedBookmark(source); }} onDragEnd={() => { draggedBookmarkRef.current = null; setDraggedBookmark(null); }} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.stopPropagation(); moveBookmark(category.id, index); }} className={`grid grid-cols-[20px_minmax(0,0.8fr)_minmax(0,1.6fr)_30px] gap-2 items-center ${draggedBookmark?.bookmarkId === bookmark.id ? 'opacity-40' : ''}`}>
+                      <span title={tu('drag')} className={`cursor-grab active:cursor-grabbing ${currentTheme.dragHandle}`}><GripHorizontal size={16} /></span>
+                      <input value={bookmark.name} onChange={(event) => updateBookmark(category.id, bookmark.id, { name: event.target.value })} placeholder={tb('name')} className={`min-w-0 px-3 py-2 text-xs rounded-lg border ${currentTheme.input}`} />
+                      <input value={bookmark.url} onChange={(event) => updateBookmark(category.id, bookmark.id, { url: event.target.value })} placeholder={tb('url')} className={`min-w-0 px-3 py-2 text-xs rounded-lg border ${currentTheme.input}`} />
+                      <button aria-label={`${tu('delete')} ${bookmark.name || tb('name')}`} title={tu('delete')} onClick={() => deleteBookmark(category.id, bookmark.id)} className="p-2 text-red-500 rounded-lg hover:bg-red-500/10"><Trash2 size={15} /></button>
+                    </div>
+                  ))}
+                </div>
+                {category.links.length === 0 && <p className="py-2 text-xs opacity-50 border border-dashed border-current/15 rounded-lg text-center">{tb('empty')}</p>}
+                <button onClick={() => addBookmark(category.id)} className={`mt-2 flex items-center gap-1 text-xs font-bold ${currentTheme.accentText}`}><Plus size={14} /> {tb('addBookmark')}</button>
+              </section>
+            );
+          })}
+        </div>
+        <div className="sticky bottom-0 flex items-center justify-between p-5 border-t border-current/10 bg-inherit">
+          <button onClick={addBookmarkCategory} className={`flex items-center gap-1 text-xs font-bold ${currentTheme.accentText}`}><Plus size={14} /> {tb('addCategory')}</button>
+          <button onClick={() => setIsBookmarkManagerOpen(false)} className={`px-4 py-2 rounded-lg text-xs font-bold ${currentTheme.accent}`}>{tc('done')}</button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={`min-h-screen transition-colors duration-500 flex flex-col font-sans ${currentTheme.bg}`}>
       {isDemoRoute() && (
@@ -953,6 +1068,28 @@ export default function SoloDashboard() {
           );
         })}
       </div>
+
+      {showAppsSetup && (
+        <>
+          <button aria-label="Close quick apps settings" onClick={() => setShowAppsSetup(false)} className="fixed inset-0 z-[60] cursor-default" />
+          <div className={`fixed top-20 right-5 sm:right-8 w-52 p-3 rounded-xl z-[70] shadow-2xl border ${theme === 'glass' ? 'bg-slate-900/95 backdrop-blur-xl border-white/20' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'}`}>
+            <h4 className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${theme === 'glass' ? 'text-white/50' : 'text-zinc-500'}`}>{tu('quickApps')}</h4>
+            <div className="space-y-1">
+              {availableGoogleApps.map(app => (
+                <label key={app.id} className="flex items-center gap-2 text-xs p-1.5 rounded hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="checkbox" checked={activeGoogleApps.includes(app.id)} onChange={(event) => {
+                    if (event.target.checked) setActiveGoogleApps(current => [...current, app.id]);
+                    else setActiveGoogleApps(current => current.filter(id => id !== app.id));
+                  }} className="rounded border-gray-400" />
+                  <app.icon size={12} className="opacity-70" /> <span>{app.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {renderBookmarkManager()}
 
       {isDeleteConfirmOpen && activeProject && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
