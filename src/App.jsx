@@ -1072,7 +1072,7 @@ export default function SoloDashboard() {
       {showAppsSetup && (
         <>
           <button aria-label="Close quick apps settings" onClick={() => setShowAppsSetup(false)} className="fixed inset-0 z-[60] cursor-default" />
-          <div className={`fixed top-20 right-5 sm:right-8 w-52 p-3 rounded-xl z-[70] shadow-2xl border ${theme === 'glass' ? 'bg-slate-900/95 backdrop-blur-xl border-white/20' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800'}`}>
+          <div className={`fixed top-20 right-5 sm:right-8 w-52 p-3 rounded-xl z-[70] shadow-2xl border ${theme === 'glass' ? 'bg-slate-900/95 backdrop-blur-xl border-white/20' : theme === 'light' ? 'bg-white text-slate-900 border-slate-200' : theme === 'hacker' ? 'bg-black text-green-400 border-green-900' : 'bg-[#18181b] text-zinc-100 border-zinc-800'}`}>
             <h4 className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${theme === 'glass' ? 'text-white/50' : 'text-zinc-500'}`}>{tu('quickApps')}</h4>
             <div className="space-y-1">
               {availableGoogleApps.map(app => (

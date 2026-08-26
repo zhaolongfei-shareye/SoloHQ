@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-08-26
+
+### Fixed
+
+- Use the active SoloHQ theme for the Google quick-app settings panel, preventing a white panel in Midnight Dark mode.
+
 ### Added
 
 - Delete projects from the edit panel with a confirmation dialog
