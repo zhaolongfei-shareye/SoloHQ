@@ -8,7 +8,7 @@ import {
   Zap, Database, Check, AlertCircle, Sparkles,
   Upload, Search, GripHorizontal, ChevronDown, Bot, MonitorPlay,
   Code, Star, Mail, Calendar, Video, HardDrive, LayoutDashboard,
-  EyeOff, Settings2
+  EyeOff, Settings2, Pin, List, ChevronUp
 } from 'lucide-react';
 
 const cloudTranslations = {
@@ -48,6 +48,19 @@ const bookmarkTranslations = {
   pt: { manage: 'Gerenciar favoritos', help: 'Arraste favoritos para reordenar ou movê-los entre categorias. Uma categoria só pode ser excluída quando estiver vazia.', addBookmark: 'Adicionar favorito', addCategory: 'Adicionar categoria', name: 'Nome', url: 'URL', empty: 'Solte favoritos aqui ou exclua esta categoria vazia.', deleteEmptyOnly: 'Remova todos os favoritos antes de excluir esta categoria.', close: 'Fechar gerenciador de favoritos' },
   ru: { manage: 'Управление закладками', help: 'Перетаскивайте закладки для сортировки или перемещения между категориями. Категорию можно удалить, только когда она пуста.', addBookmark: 'Добавить закладку', addCategory: 'Добавить категорию', name: 'Название', url: 'URL', empty: 'Перетащите закладки сюда или удалите эту пустую категорию.', deleteEmptyOnly: 'Удалите все закладки перед удалением этой категории.', close: 'Закрыть управление закладками' },
   ar: { manage: 'إدارة الإشارات المرجعية', help: 'اسحب الإشارات لإعادة ترتيبها أو نقلها بين الفئات. لا يمكن حذف الفئة إلا عندما تكون فارغة.', addBookmark: 'إضافة إشارة', addCategory: 'إضافة فئة', name: 'الاسم', url: 'الرابط', empty: 'أفلت الإشارات هنا أو احذف هذه الفئة الفارغة.', deleteEmptyOnly: 'أزل كل الإشارات قبل حذف هذه الفئة.', close: 'إغلاق إدارة الإشارات' }
+};
+
+const notesTranslations = {
+  en: { index: 'Note index', entries: '{count} entries', entry: '1 entry', add: 'Add note', placeholder: 'Write a new note — today’s date is added automatically.', pin: 'Pin note', unpin: 'Unpin note', pinned: 'Pinned note', collapse: 'Collapse pinned note', expand: 'Expand pinned note', jump: 'Jump to note', saved: 'Saved just now' },
+  zh: { index: '笔记索引', entries: '{count} 条笔记', entry: '1 条笔记', add: '添加笔记', placeholder: '写下新笔记，系统会自动添加当天日期。', pin: '置顶笔记', unpin: '取消置顶', pinned: '已置顶笔记', collapse: '收起置顶笔记', expand: '展开置顶笔记', jump: '跳转到笔记', saved: '刚刚保存' },
+  ja: { index: 'メモ一覧', entries: '{count} 件のメモ', entry: '1 件のメモ', add: 'メモを追加', placeholder: '新しいメモを書くと、今日の日付が自動的に追加されます。', pin: 'メモを固定', unpin: '固定を解除', pinned: '固定したメモ', collapse: '固定メモを折りたたむ', expand: '固定メモを展開', jump: 'メモへ移動', saved: 'たった今保存' },
+  ko: { index: '메모 색인', entries: '{count}개 메모', entry: '메모 1개', add: '메모 추가', placeholder: '새 메모를 작성하면 오늘 날짜가 자동으로 추가됩니다.', pin: '메모 고정', unpin: '고정 해제', pinned: '고정된 메모', collapse: '고정 메모 접기', expand: '고정 메모 펼치기', jump: '메모로 이동', saved: '방금 저장됨' },
+  es: { index: 'Índice de notas', entries: '{count} notas', entry: '1 nota', add: 'Añadir nota', placeholder: 'Escribe una nota nueva; la fecha de hoy se añade automáticamente.', pin: 'Fijar nota', unpin: 'Desfijar nota', pinned: 'Nota fijada', collapse: 'Contraer nota fijada', expand: 'Expandir nota fijada', jump: 'Ir a la nota', saved: 'Guardado ahora' },
+  fr: { index: 'Index des notes', entries: '{count} notes', entry: '1 note', add: 'Ajouter une note', placeholder: 'Écrivez une note ; la date du jour est ajoutée automatiquement.', pin: 'Épingler la note', unpin: 'Désépingler la note', pinned: 'Note épinglée', collapse: 'Réduire la note épinglée', expand: 'Développer la note épinglée', jump: 'Aller à la note', saved: 'Enregistré à l’instant' },
+  de: { index: 'Notizindex', entries: '{count} Notizen', entry: '1 Notiz', add: 'Notiz hinzufügen', placeholder: 'Schreibe eine neue Notiz – das heutige Datum wird automatisch hinzugefügt.', pin: 'Notiz anheften', unpin: 'Notiz lösen', pinned: 'Angeheftete Notiz', collapse: 'Angeheftete Notiz einklappen', expand: 'Angeheftete Notiz ausklappen', jump: 'Zur Notiz springen', saved: 'Gerade gespeichert' },
+  pt: { index: 'Índice de notas', entries: '{count} notas', entry: '1 nota', add: 'Adicionar nota', placeholder: 'Escreva uma nota; a data de hoje será adicionada automaticamente.', pin: 'Fixar nota', unpin: 'Desafixar nota', pinned: 'Nota fixada', collapse: 'Recolher nota fixada', expand: 'Expandir nota fixada', jump: 'Ir para a nota', saved: 'Salvo agora' },
+  ru: { index: 'Индекс заметок', entries: '{count} заметок', entry: '1 заметка', add: 'Добавить заметку', placeholder: 'Напишите новую заметку — сегодняшняя дата добавится автоматически.', pin: 'Закрепить заметку', unpin: 'Открепить заметку', pinned: 'Закреплённая заметка', collapse: 'Свернуть закреплённую заметку', expand: 'Развернуть закреплённую заметку', jump: 'Перейти к заметке', saved: 'Только что сохранено' },
+  ar: { index: 'فهرس الملاحظات', entries: '{count} ملاحظات', entry: 'ملاحظة واحدة', add: 'إضافة ملاحظة', placeholder: 'اكتب ملاحظة جديدة وستضاف لها تاريخ اليوم تلقائياً.', pin: 'تثبيت الملاحظة', unpin: 'إلغاء تثبيت الملاحظة', pinned: 'ملاحظة مثبتة', collapse: 'طي الملاحظة المثبتة', expand: 'توسيع الملاحظة المثبتة', jump: 'انتقل إلى الملاحظة', saved: 'تم الحفظ الآن' }
 };
 
 const languageOptions = [
@@ -163,11 +176,35 @@ const getIcon = (iconName) => {
 
 const DEFAULT_MEMO = '# Vision\n\n- Write goals here...';
 
+const localDateKey = (value) => {
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 10);
+};
+
+const projectNotes = (project) => {
+  if (Array.isArray(project?.notes)) return project.notes;
+  const legacyMemo = String(project?.memo || '').trim();
+  if (!legacyMemo || legacyMemo === DEFAULT_MEMO) return [];
+  return [{ id: `legacy_${project.id}`, createdAt: project.lastUpdated || Date.now(), content: legacyMemo }];
+};
+
+const notesToMemo = (notes) => notes
+  .filter((note) => String(note.content || '').trim())
+  .map((note) => `## ${localDateKey(note.createdAt)}\n${String(note.content).trim()}`)
+  .join('\n\n');
+
+const notePreview = (note) => {
+  const text = String(note?.content || '').replace(/\s+/g, ' ').trim();
+  return text.length > 88 ? `${text.slice(0, 88)}…` : text;
+};
+
 const isDemoRoute = () =>
   typeof window !== 'undefined' &&
   window.location.pathname.startsWith('/solohq/demo/');
 
 const hasProjectNotes = (project) => {
+  if (Array.isArray(project?.notes)) return project.notes.some((note) => String(note.content || '').trim());
   const memo = String((project && project.memo) || '').trim();
   return memo.length > 0 && memo !== DEFAULT_MEMO;
 };
@@ -263,8 +300,14 @@ export default function SoloDashboard() {
   }, [language]);
   const td = useCallback((key) => docsTranslations[language]?.[key] || docsTranslations.en[key] || key, [language]);
   const tb = useCallback((key) => bookmarkTranslations[language]?.[key] || bookmarkTranslations.en[key] || key, [language]);
+  const tn = useCallback((key, variables = {}) => {
+    const template = notesTranslations[language]?.[key] || notesTranslations.en[key] || key;
+    return Object.entries(variables).reduce((value, [name, replacement]) => value.replace(`{${name}}`, replacement), template);
+  }, [language]);
   
   const [isSyncingNotes, setIsSyncingNotes] = useState(false);
+  const [newNoteDraft, setNewNoteDraft] = useState('');
+  const [isPinnedNoteCollapsed, setIsPinnedNoteCollapsed] = useState(false);
   const [syncStatusKey, setSyncStatusKey] = useState('notConnected');
   const [pendingDocsProjectId, setPendingDocsProjectId] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -339,6 +382,39 @@ export default function SoloDashboard() {
 
   const updateProject = (id, updates) => {
     setProjects(projects.map(p => p.id === id ? { ...p, ...updates, lastUpdated: Date.now() } : p));
+  };
+
+  const updateProjectNotes = (projectId, updater) => {
+    setProjects((current) => current.map((project) => {
+      if (project.id !== projectId) return project;
+      const notes = updater(projectNotes(project));
+      return { ...project, notes, memo: notesToMemo(notes), lastUpdated: Date.now() };
+    }));
+  };
+
+  const addProjectNote = () => {
+    const content = newNoteDraft.trim();
+    if (!activeProject || !content) return;
+    const note = { id: `note_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, createdAt: Date.now(), content };
+    updateProjectNotes(activeProject.id, (notes) => [...notes, note]);
+    setNewNoteDraft('');
+    window.setTimeout(() => document.getElementById(`note-${note.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+  };
+
+  const updateProjectNote = (noteId, content) => {
+    if (!activeProject) return;
+    updateProjectNotes(activeProject.id, (notes) => notes.map((note) => note.id === noteId ? { ...note, content } : note));
+  };
+
+  const togglePinnedNote = (noteId) => {
+    if (!activeProject) return;
+    const pinnedNoteId = activeProject.pinnedNoteId === noteId ? null : noteId;
+    updateProject(activeProject.id, { pinnedNoteId });
+    setIsPinnedNoteCollapsed(false);
+  };
+
+  const jumpToNote = (noteId) => {
+    document.getElementById(`note-${noteId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const handleDeleteProject = () => {
@@ -836,7 +912,7 @@ export default function SoloDashboard() {
                   setProjects([{
                     id: newId, name: tu('newProject'), progress: 0, status: 'developing', hours: 0, lastUpdated: Date.now(),
                     links: { github: '', knowledge: '', deploy: '', demo: '', analytics: '' },
-                    memo: DEFAULT_MEMO
+                    memo: DEFAULT_MEMO, notes: []
                   }, ...projects]);
                   isNewProjectRef.current = true;
                   setActiveProjectId(newId);
@@ -856,14 +932,22 @@ export default function SoloDashboard() {
         <p className="text-sm font-bold">{tu('selectProject')}</p>
       </div>
     );
+    const notes = projectNotes(activeProject);
+    const notesByDate = notes.reduce((groups, note) => {
+      const key = localDateKey(note.createdAt);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(note);
+      return groups;
+    }, {});
+    const dateGroups = Object.entries(notesByDate).sort(([left], [right]) => right.localeCompare(left));
+    const pinnedNote = notes.find((note) => note.id === activeProject.pinnedNoteId);
+    const noteDateFormatter = new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : language, { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' });
     return (
       <main className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 relative group min-h-0">
-        <div draggable onDragStart={(e) => handleDragStart(e, 'workspace')} onDragEnd={handleDragEnd} className={`absolute -top-3 -left-6 cursor-grab active:cursor-grabbing p-1 hidden lg:block ${currentTheme.dragHandle}`}>
-          <GripHorizontal size={14} />
-        </div>
         <div className={`flex-1 flex flex-col rounded-xl overflow-hidden min-h-[400px] shadow-sm border ${currentTheme.widget}`}>
             <div className={`p-3 px-4 border-b border-current/10 flex justify-between items-center bg-black/5 dark:bg-white/5`}>
               <div className="flex min-w-0 items-center gap-2">
+                <div draggable onDragStart={(event) => handleDragStart(event, 'workspace')} onDragEnd={handleDragEnd} title={tu('drag')} className={`shrink-0 cursor-grab active:cursor-grabbing p-1 hidden lg:block ${currentTheme.dragHandle}`}><GripHorizontal size={14} /></div>
                 <FileText size={16} className={currentTheme.accentText} />
                 <span className="min-w-0 font-bold text-sm truncate">{activeProject.name} <span className="opacity-40 font-normal">| {tu('workspaceMemo')}</span></span>
                 {activeProject.links?.docs && (
@@ -889,8 +973,49 @@ export default function SoloDashboard() {
                 </button>
               </div>
             </div>
-            <textarea value={activeProject.memo} onChange={(e) => updateProject(activeProject.id, { memo: e.target.value })} placeholder="Daily dev log, milestones, ideas..." className={`w-full flex-1 p-5 outline-none bg-transparent leading-relaxed text-sm transition-colors resize-none ${theme === 'hacker' ? 'text-green-400 font-mono' : 'font-sans'}`} />
+            {pinnedNote && (
+              <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-xs">
+                <Pin size={13} className={currentTheme.accentText} />
+                {!isPinnedNoteCollapsed && <button onClick={() => jumpToNote(pinnedNote.id)} title={tn('jump')} className="min-w-0 flex-1 text-left font-medium truncate hover:underline"><span className={`mr-2 text-[9px] font-black uppercase tracking-wider ${currentTheme.accentText}`}>{tn('pinned')}</span>{notePreview(pinnedNote)}</button>}
+                <button aria-label={isPinnedNoteCollapsed ? tn('expand') : tn('collapse')} onClick={() => setIsPinnedNoteCollapsed((current) => !current)} className="p-1 opacity-70 hover:opacity-100">
+                  {isPinnedNoteCollapsed ? <ChevronDown size={15} /> : <ChevronUp size={15} />}
+                </button>
+              </div>
+            )}
+            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-hide">
+              {dateGroups.map(([date, group]) => (
+                <section id={`note-date-${date}`} key={date} className="scroll-mt-24">
+                  <h3 className={`mb-2 text-[10px] uppercase tracking-wider font-black ${currentTheme.accentText}`}>{noteDateFormatter.format(new Date(`${date}T12:00:00`))}</h3>
+                  <div className="space-y-3">
+                    {group.map((note) => (
+                      <article id={`note-${note.id}`} key={note.id} className="relative scroll-mt-32 rounded-lg border border-current/10 bg-black/5 dark:bg-white/5 p-3 pr-12">
+                        <div className={`mb-2 text-[10px] font-bold ${currentTheme.textMuted}`}>{new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : language, { hour: '2-digit', minute: '2-digit' }).format(new Date(note.createdAt))}</div>
+                        <textarea value={note.content} onChange={(event) => updateProjectNote(note.id, event.target.value)} className={`w-full min-h-[76px] resize-y bg-transparent outline-none text-sm leading-relaxed ${theme === 'hacker' ? 'text-green-400 font-mono' : 'font-sans'}`} />
+                        <button aria-label={activeProject.pinnedNoteId === note.id ? tn('unpin') : tn('pin')} title={activeProject.pinnedNoteId === note.id ? tn('unpin') : tn('pin')} onClick={() => togglePinnedNote(note.id)} className={`absolute right-3 top-3 rounded-md p-1.5 transition-colors ${activeProject.pinnedNoteId === note.id ? `${currentTheme.accentText} bg-emerald-500/15` : 'opacity-35 hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10'}`}><Pin size={14} /></button>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ))}
+              {notes.length === 0 && <p className="py-8 text-center text-sm opacity-45">{tn('placeholder')}</p>}
+              <div className="rounded-xl border border-dashed border-current/20 p-3">
+                <textarea value={newNoteDraft} onChange={(event) => setNewNoteDraft(event.target.value)} placeholder={tn('placeholder')} className={`w-full min-h-[78px] resize-y bg-transparent outline-none text-sm leading-relaxed ${theme === 'hacker' ? 'text-green-400 font-mono' : 'font-sans'}`} />
+                <div className="mt-2 flex justify-end"><button disabled={!newNoteDraft.trim()} onClick={addProjectNote} className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40 ${currentTheme.accent}`}><Plus size={13} /> {tn('add')}</button></div>
+              </div>
+            </div>
         </div>
+        <aside className={`w-full lg:w-52 flex flex-col rounded-xl overflow-hidden flex-shrink-0 shadow-sm border ${currentTheme.widget}`}>
+          <div className="p-3 px-4 border-b border-current/10 flex items-center gap-1.5 bg-black/5 dark:bg-white/5"><List size={14} className={currentTheme.accentText} /><h2 className="font-bold text-xs uppercase tracking-wider opacity-70">{tn('index')}</h2></div>
+          <div className="p-2 space-y-1 overflow-y-auto scrollbar-hide">
+            {dateGroups.map(([date, group]) => (
+              <button key={date} onClick={() => document.getElementById(`note-date-${date}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="w-full rounded-lg p-2 text-left text-xs hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                <span className="block font-bold">{noteDateFormatter.format(new Date(`${date}T12:00:00`))}</span>
+                <span className={`block mt-0.5 text-[10px] ${currentTheme.textMuted}`}>{group.length === 1 ? tn('entry') : tn('entries', { count: group.length })}</span>
+              </button>
+            ))}
+            {dateGroups.length === 0 && <p className="p-3 text-xs opacity-45">{tn('placeholder')}</p>}
+          </div>
+        </aside>
         <div className={`w-full lg:w-80 flex flex-col rounded-xl overflow-hidden flex-shrink-0 shadow-sm border ${currentTheme.widget}`}>
             <div className={`p-3 px-4 border-b border-current/10 flex justify-between items-center bg-black/5 dark:bg-white/5`}>
               <h2 className="font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 opacity-70">

@@ -68,4 +68,17 @@ describe('SoloHQ', () => {
     expect(screen.getByText('Quick Apps')).toBeInTheDocument()
     expect(screen.getByLabelText('Close quick apps settings')).toBeInTheDocument()
   })
+
+  it('dates new notes, indexes them, and supports pinning', () => {
+    render(<App />)
+
+    expect(screen.getByText('Note index')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Pin note' }))
+    expect(screen.getByText('Pinned note')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByPlaceholderText(/today’s date is added automatically/i), { target: { value: 'Prepare the customer interview script.' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Add note' }))
+
+    expect(screen.getByDisplayValue('Prepare the customer interview script.')).toBeInTheDocument()
+  })
 })

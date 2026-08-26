@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-08-26
+
+### Added
+
+- Date-stamped workspace notes with automatic daily grouping
+- A date index for jumping directly to notes from any day
+- Pinned-note summaries that stay at the top and jump back to the source note
+
+### Fixed
+
+- Aligned the workspace drag handle with the note-panel header
+
 ## [0.2.4] - 2026-08-26
 
 ### Fixed

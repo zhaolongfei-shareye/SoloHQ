@@ -1,6 +1,6 @@
 {
   "name": "solohq",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Cloud-synced dashboard for one-person companies with optional Google sign-in.",
   "type": "module",
   "license": "MIT",
